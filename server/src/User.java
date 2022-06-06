@@ -3,7 +3,7 @@ import java.util.HashSet;
 
 public class User {
     private String userName;
-//  private String password;
+    //  private String password;
     private String hashedPassword;
     private String email;
     private String phoneNumber;
@@ -34,3 +34,4 @@ public class User {
         return userName;
     }
 }
+

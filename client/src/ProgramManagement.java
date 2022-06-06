@@ -1,6 +1,6 @@
 import java.util.HashSet;
 
-public class Discord {
+public class ProgramManagement {
 //    private HashSet<User> allUsers;
 
     public void signUp (User user) {
