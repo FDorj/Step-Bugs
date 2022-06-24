@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class User {
+public class User implements Serializable {
     private String userName;
     //  private String password;
     private String hashedPassword;
@@ -80,4 +81,5 @@ public class User {
     public void setDiscordServers(HashSet<DiscordServer> discordServers) {
         this.discordServers = discordServers;
     }
+
 }

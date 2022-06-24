@@ -5,7 +5,7 @@ public final class UserList {
     private ArrayList<User> users;
 
     private UserList() {
-
+        this.users = new ArrayList<>();
     }
 
     public static UserList getInstance(){
@@ -18,4 +18,9 @@ public final class UserList {
     public ArrayList<User> getUsers() {
         return users;
     }
+
+    public void addUser (User user) {
+        this.users.add(user);
+    }
+
 }

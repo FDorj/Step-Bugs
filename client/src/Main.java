@@ -7,11 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.err.println("AM 11");
-        System.err.println("And sosan");
-
-        System.out.println("1.Sign in");
-        System.out.println("2.Sign up");
+        System.err.println("MAZ MAZ AND SOSAN");
 
         Scanner scanner = new Scanner(System.in);
         InputHandler inputHandler = new InputHandler(scanner);

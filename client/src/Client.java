@@ -23,11 +23,20 @@ public class Client {
         }
     }
 
+    public void addUserToServer () {
+        try {
+            objectOutputStream.writeObject(this.user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public HashSet<User> friendList () {
         HashSet<User> friends = null;
         try {
             objectOutputStream.writeObject("Show friends list");
             friends = (HashSet<User>) objectInputStream.readObject();
+            return friends;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -40,6 +49,7 @@ public class Client {
         try {
             objectOutputStream.writeObject("Show servers list");
             discordServers = (HashSet<DiscordServer>) objectInputStream.readObject();
+            return discordServers;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -114,12 +124,14 @@ public class Client {
 
     public void addServer(String serverName){
         try {
-            objectOutputStream.writeObject("AddServer " + serverName );
+            objectOutputStream.writeObject("AddServer " + serverName);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 //    public void sendMessage () {
 //        try {

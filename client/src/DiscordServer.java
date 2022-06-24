@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class DiscordServer {
+public class DiscordServer implements Serializable {
     private String name;
     private User owner;
     private HashSet<User> admin;

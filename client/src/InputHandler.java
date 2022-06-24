@@ -41,11 +41,13 @@ public class InputHandler {
                     e.printStackTrace();
                 }
                 User user = new User(userName,hashed,email,phoneNumber);
+
                 Socket socket = null;
                 Client client = null;
                 try {
                     socket = new Socket("localhost", 2000);
                     client = new Client(socket, user);
+                    client.addUserToServer();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -64,7 +66,7 @@ public class InputHandler {
                         int select = Integer.parseInt(scanner.nextLine());
                         if (select == 1) {
                             int i = 1;
-                            if (client.friendList() == null) {
+                            if (client.friendList().size() == 0) {
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
                                 for (User friend : client.friendList()) {
@@ -73,7 +75,7 @@ public class InputHandler {
                                 }
                             }
                         }else if (select == 2) {
-                            if(client.friendList() == null){
+                            if(client.friendList().size() == 0){
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
                                 int i = 1;
@@ -120,7 +122,7 @@ public class InputHandler {
                             }
 
                         }else if (select == 5) {
-                            break;
+                            continue;
                         }
                     }else if(choice == 2){
                         printServerMenu();
@@ -130,12 +132,14 @@ public class InputHandler {
                         int select = Integer.parseInt(scanner.nextLine());
                         if (select == 1) {
                             int i = 1;
-                            if (client.discordServersList().equals(null)) {
+                            if (client.discordServersList().size() == 0) {
                                 System.out.println("There is no server!");
                             }
-                            for (DiscordServer discordServer : client.discordServersList()) {
-                                System.out.println(i + ". " + discordServer + "\n");
-                                i++;
+                            else {
+                                for (DiscordServer discordServer : client.discordServersList()) {
+                                    System.out.println(i + ". " + discordServer + "\n");
+                                    i++;
+                                }
                             }
                         }
                         else if (select == 2) {
@@ -143,7 +147,7 @@ public class InputHandler {
                             String serverName = scanner.nextLine();
                             client.addServer(serverName);
                         }else if (select == 3) {
-                            break;
+                            continue;
                         }
                     }else if(choice == 3){
                             int i = 1;
@@ -171,7 +175,7 @@ public class InputHandler {
                             statusEnum = Status.INVISIBLE;
                             user.setStatus(statusEnum);
                         }else if (status == 5) {
-                            break;
+                            continue;
                         }
                     }else if (choice == 5) {
                         printSettingMenu();
@@ -187,7 +191,7 @@ public class InputHandler {
                         }else if (select == 3) {
 
                         }else if (select == 4) {
-                            break;
+                            continue;
                         }
 
                     }

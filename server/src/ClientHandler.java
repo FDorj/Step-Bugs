@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private User user;
+    private UserList userList = UserList.getInstance();
 
     public ClientHandler (Socket socket) {
         try {
@@ -19,6 +20,7 @@ public class ClientHandler implements Runnable {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
             this.user = (User) objectInputStream.readObject();
+            userList.addUser(user);
             clientHandlers.add(this);
            // broadCastMessage("SERVER : " + user.getUserName() + "has entered the chat!");
         } catch (IOException | ClassNotFoundException e) {
@@ -29,8 +31,6 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         String messageFromClient;
-
-
         try {
             while (socket.isConnected()) {
                 messageFromClient = (String) objectInputStream.readObject();
@@ -43,8 +43,11 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 else if (messageFromClient.equals("Show servers list")) {
+                    System.out.println("1***");
                     try {
+                        System.out.println("2***");
                         objectOutputStream.writeObject(user.getDiscordServers());
+                        System.out.println("3***");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -101,12 +104,11 @@ public class ClientHandler implements Runnable {
                 }else if(messageFromClient.equals("Show incoming requests list")){
                     objectOutputStream.writeObject(user.getInComingPending());
                 }else if(messageFromClient.startsWith("AddServer")){
-                    String serverName = messageFromClient.substring(9);
+                    String serverName = messageFromClient.substring(10);
                     DiscordServer newServer = new DiscordServer(serverName, user);
                     HashSet<DiscordServer> servers = user.getDiscordServers();
                     servers.add(newServer);
                     user.setDiscordServers(servers);
-
                 }
 
                 }
