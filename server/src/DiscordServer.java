@@ -15,4 +15,6 @@ public class DiscordServer {
         this.channels = new HashSet<>();
     }
 
+
+
 }
