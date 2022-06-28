@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -12,30 +14,56 @@ public class Client {
     private ObjectOutputStream objectOutputStream;
     private User user;
 
-    public Client (Socket socket , User user) {
+    public Client (Socket socket) {
         try {
             this.socket = socket;
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
-            this.user = user;
         } catch (IOException e) {
             //closeEveryThing(socket,objectInputStream,objectOutputStream);
         }
     }
 
-    public void addUserToServer () {
+    public void addUserToClient(User user){
+        this.user = user;
+    }
+
+    public String signIn(String userName, String password){
+        String serverMessage = null;
         try {
-            objectOutputStream.writeObject(this.user);
+            objectOutputStream.writeObject("SignIn " + userName + " " + password);
+            serverMessage = (String) objectInputStream.readObject();
+            return serverMessage;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return serverMessage;
+    }
+
+    public void signUp(){
+        try {
+            objectOutputStream.writeObject("SignUp");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public HashSet<User> friendList () {
-        HashSet<User> friends = null;
+    public void addUserToServer () {
+        try {
+            System.out.println("@ before add user");
+            objectOutputStream.writeObject(this.user);
+            System.out.println("# after add user");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<User, Status> friendList () {
+        HashMap<User, Status> friends = null;
         try {
             objectOutputStream.writeObject("Show friends list");
-            friends = (HashSet<User>) objectInputStream.readObject();
+            friends = (HashMap<User, Status>) objectInputStream.readObject();
+            System.out.println("77777&&&&& " + user.getFriends().size());
             return friends;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -72,7 +100,7 @@ public class Client {
         try{
             objectOutputStream.writeObject("checkUserName " + userName);
             hasUserName = (boolean)objectInputStream.readObject();
-
+            return hasUserName;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -83,7 +111,10 @@ public class Client {
         boolean isFriend = false;
         try{
             objectOutputStream.writeObject("checkIsFriend " + userName);
+            System.out.println("@@@ b " + isFriend);
             isFriend = (boolean)objectInputStream.readObject();
+            System.out.println("### a " + isFriend);
+            return isFriend;
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -94,7 +125,6 @@ public class Client {
     public void friendRequest(String userName){
         try {
             objectOutputStream.writeObject("request " + userName);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,6 +141,11 @@ public class Client {
         return outGoingRequest;
     }
 
+    public ArrayList<User> outGoingInviteList () {
+        ArrayList<User> outGoingRequestList = new ArrayList<>(outGoingInvite());
+        return outGoingRequestList;
+    }
+
     public HashSet<User> incomingInvite () {
         HashSet<User> incomingRequest = null;
         try {
@@ -122,6 +157,27 @@ public class Client {
         return incomingRequest;
     }
 
+    public ArrayList<User> incomingInviteList () {
+        ArrayList<User> incomingRequestList = new ArrayList<>(incomingInvite());
+        return incomingRequestList;
+    }
+
+    public void acceptOrRejectIncoming(int num, User user1){
+        try {
+            objectOutputStream.writeObject("acceptOrRejectIncoming " + user1.getUserName() + " " +num);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void acceptOrRejectOutGoing(int num, User user1){
+        try {
+            objectOutputStream.writeObject("acceptOrRejectOutGoing " + user1.getUserName() + " " +num);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addServer(String serverName){
         try {
             objectOutputStream.writeObject("AddServer " + serverName);
@@ -131,6 +187,13 @@ public class Client {
         }
     }
 
+    public void setUserStatus(String status){
+        try {
+            objectOutputStream.writeObject("SetStatus " + status);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 //    public void sendMessage () {

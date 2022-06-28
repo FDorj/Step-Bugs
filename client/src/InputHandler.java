@@ -2,8 +2,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 public class InputHandler {
     private Scanner scanner;
@@ -16,12 +15,30 @@ public class InputHandler {
         printFirstMenu();
         boolean whileBoolean = true;
         while (whileBoolean) {
+            Client client = null;
             int input = Integer.parseInt(scanner.nextLine());
             if (input == 1) {
                 System.out.print("Enter your username : ");
                 String userName = scanner.nextLine();
                 System.out.print("\nEnter your password : ");
                 String password = scanner.nextLine();
+
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 2000);
+                    client = new Client(socket);
+                    String serverMessage = client.signIn(userName, password);
+                    if (serverMessage.equals("UserNotFound")) {
+                        System.out.println("User not found!");
+                    } else if (serverMessage.equals("WrongPassword")) {
+                        System.out.println("Wrong password!");
+                    } else if (serverMessage.equals("SuccessfullySignedIn")) {
+                        System.out.println(":D Successfully signed in :D");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 //sign up
             } else if (input == 2) {
@@ -40,17 +57,20 @@ public class InputHandler {
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
-                User user = new User(userName,hashed,email,phoneNumber);
+                User user = new User(userName, hashed, email, phoneNumber);
 
                 Socket socket = null;
-                Client client = null;
                 try {
                     socket = new Socket("localhost", 2000);
-                    client = new Client(socket, user);
+                    client = new Client(socket);
+                    client.signUp();
+                    client.addUserToClient(user);
                     client.addUserToServer();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+
 
 
                 while (!(false)) {
@@ -69,8 +89,9 @@ public class InputHandler {
                             if (client.friendList().size() == 0) {
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
-                                for (User friend : client.friendList()) {
-                                    System.out.println(i + ". " + friend + "\n");
+                                HashMap<User, Status> userStatusHashMap = client.friendList();
+                                for (User keyUser : userStatusHashMap.keySet()){
+                                    System.out.println(i + ". " + keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
                                     i++;
                                 }
                             }
@@ -79,28 +100,76 @@ public class InputHandler {
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
                                 int i = 1;
-                                for (User onlineFriend : client.friendList()){
-                                    if(onlineFriend.getStatus().equals(Status.ONLINE)){
-                                        System.out.println(i + ". " + onlineFriend + "\n");
+                                for (User onlineFriend : client.friendList().keySet()){
+                                    if(client.friendList().get(onlineFriend).equals(Status.ONLINE)){
+                                        System.out.println(i + ". " + onlineFriend.getUserName() + "\n");
                                         i++;
                                     }
                                 }
                             }
                         }else if (select == 3) {
-                            int i = 1;
-                            //print
-                            for (User user2 : client.incomingInvite()) {
-                                System.out.println(i + ". " + user2);
-                                i++;
+                            while (true) {
+                                int i = 1;
+                                //print
+                                System.out.println("incoming friend requests:");
+                                for (User user2 : client.incomingInviteList()) {
+                                    System.out.println(i + ". " + user2.getUserName());
+                                    i++;
+                                }
+                                System.out.println("\nout going friend requests:");
+                                for (User user3 : client.outGoingInviteList()) {
+                                    System.out.println(i + ". " + user3.getUserName());
+                                    i++;
+                                }
+                                int pendingInput = Integer.parseInt(scanner.nextLine());
+
+                                try {
+                                    if (pendingInput > 0 && pendingInput <= client.outGoingInviteList().size() + client.incomingInviteList().size()) {
+                                        if (pendingInput <= client.incomingInviteList().size()) {
+                                            int acceptOrReject = 0;
+                                            try{
+                                                System.out.println("1.accept\t2.reject\t3.back to pending");
+                                                acceptOrReject = Integer.parseInt(scanner.nextLine());
+                                                if(!(acceptOrReject == 1 || acceptOrReject ==2 || acceptOrReject == 3)){
+                                                    throw new ExceptionHandler();
+                                                }
+                                            }catch (ExceptionHandler exceptionHandler){
+                                                System.out.println("Invalid Input!");
+                                                continue;
+                                            }
+                                            if (acceptOrReject == 3){
+                                                continue;
+                                            }
+                                            client.acceptOrRejectIncoming(acceptOrReject, client.incomingInviteList().get(pendingInput - 1));
+                                            break;
+                                        } else {
+                                            int acceptOrReject = 0;
+                                            try {
+                                                System.out.println("1.cancel\t2.back to pending");
+                                                acceptOrReject = Integer.parseInt(scanner.nextLine());
+                                                if (!(acceptOrReject == 1 || acceptOrReject == 2)){
+                                                  throw new ExceptionHandler();
+                                                }
+                                            }catch (ExceptionHandler e){
+                                                System.out.println("Invalid Input");
+                                                continue;
+                                            }
+                                            client.acceptOrRejectOutGoing(acceptOrReject, client.outGoingInviteList().get(pendingInput - client.incomingInviteList().size() - 1));
+                                            break;
+                                        }
+                                    }else {
+                                        throw new ExceptionHandler();
+                                    }
+                                }catch (ExceptionHandler e){
+                                    System.out.println("Invalid Input! Try Again");
+                                }
                             }
-                            for (User user3 : client.outGoingInvite()) {
-                                System.out.println(i + ". " + user3);
-                                i++;
-                            }
+
 
                         }else if (select == 4) {
                             System.out.println("Enter a user name: \n");
                             String friendToAdd = scanner.nextLine();
+                            //System.out.println("1---" + client.checkUserName(friendToAdd));
                             if(client.checkUserName(friendToAdd)) {
                                 if(!client.checkIsFriend(friendToAdd)) {
                                     client.friendRequest(friendToAdd);
@@ -161,20 +230,15 @@ public class InputHandler {
                         }else if (choice == 4) {
                         printStatusMenu();
                         int status = Integer.parseInt(scanner.nextLine());
-                        Enum<Status> statusEnum = null;
                         if (status == 1) {
-                            statusEnum = Status.ONLINE;
-                            user.setStatus(statusEnum);
+                            client.setUserStatus(Status.ONLINE.name());
                         }else if (status == 2) {
-                            statusEnum = Status.IDLE;
-                            user.setStatus(statusEnum);
+                            client.setUserStatus(Status.IDLE.name());
                         }else if (status == 3) {
-                            statusEnum = Status.DO_NOT_DISTURB;
-                            user.setStatus(statusEnum);
+                            client.setUserStatus(Status.DO_NOT_DISTURB.name());
                         }else if (status == 4) {
-                            statusEnum = Status.INVISIBLE;
-                            user.setStatus(statusEnum);
-                        }else if (status == 5) {
+                            client.setUserStatus(Status.OFFLINE.name());
+                        }else {
                             continue;
                         }
                     }else if (choice == 5) {
@@ -196,7 +260,6 @@ public class InputHandler {
 
                     }
                 }
-            }
         }
     }
 

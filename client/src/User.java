@@ -4,12 +4,12 @@ import java.util.HashSet;
 
 public class User implements Serializable {
     private String userName;
-//  private String password;
+    //  private String password;
     private String hashedPassword;
     private String email;
     private String phoneNumber;
     //photo
-    private Enum status;
+    private Status status;
     private HashSet<User> friends;
     private HashSet<User> blocked;
     private HashMap<User, PrivateChat> chats;
@@ -42,6 +42,10 @@ public class User implements Serializable {
         return friends;
     }
 
+    public void setFriends(HashSet<User> friends) {
+        this.friends = friends;
+    }
+
     public HashSet<DiscordServer> getDiscordServers() {
         return discordServers;
     }
@@ -50,12 +54,12 @@ public class User implements Serializable {
         return blocked;
     }
 
-    public void setStatus(Enum status) {
-        this.status = status;
+    public Status getStatus() {
+        return status;
     }
 
-    public Enum getStatus() {
-        return status;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getUserName() {
@@ -70,6 +74,10 @@ public class User implements Serializable {
         this.outGoingPending = outGoingPending;
     }
 
+    public void removeOutGoingPending(User user){
+        outGoingPending.remove(user);
+    }
+
     public HashSet<User> getInComingPending() {
         return inComingPending;
     }
@@ -78,8 +86,19 @@ public class User implements Serializable {
         this.inComingPending = inComingPending;
     }
 
+    public void removeIncomingPending(User user){
+        inComingPending.remove(user);
+    }
+
     public void setDiscordServers(HashSet<DiscordServer> discordServers) {
         this.discordServers = discordServers;
     }
 
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
 }
