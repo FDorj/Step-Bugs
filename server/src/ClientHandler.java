@@ -16,7 +16,6 @@ public class ClientHandler implements Runnable {
     private ObjectOutputStream objectOutputStream;
     private User user;
     private UserList userList = UserList.getInstance();
-    private boolean isSignUpOrSignIn;
 
     public ClientHandler (Socket socket) {
         try {
@@ -52,15 +51,15 @@ public class ClientHandler implements Runnable {
         String messageFromClient;
         try {
             while (socket.isConnected()) {
-                System.out.println("0---isSignUpOrSignIn = " + isSignUpOrSignIn);
                 signInOrSignUpMessage = (String) objectInputStream.readObject();
                 System.out.println("####" + signInOrSignUpMessage);
-                System.out.println("1---isSignUpOrSignIn = " + isSignUpOrSignIn);
-                if (signInOrSignUpMessage.startsWith("SignIn") && clientHandlers.contains()) {
-                    System.out.println("2---isSignUpOrSignIn = " + isSignUpOrSignIn);
+                if (signInOrSignUpMessage.startsWith("SignIn")) {
 //                    addUserToClientHandler();
                     String[] splittedMessage = signInOrSignUpMessage.split("\\s");
                     String userName = splittedMessage[1];
+                    if (!checkClientHandler(userName)){
+                        objectOutputStream.writeObject("You are already in");
+                    }
                     String password = splittedMessage[2];
                     UserList userList = UserList.getInstance();
                     if (!userList.checkUser(userName)){
@@ -74,12 +73,8 @@ public class ClientHandler implements Runnable {
                         clientHandlers.add(this);
                         System.out.println("SERVER : " + user.getUserName() + "has entered the chat!");
                     }
-                    System.out.println("3---isSignUpOrSignIn = " + isSignUpOrSignIn);
                 }else if (signInOrSignUpMessage.startsWith("SignUp")) {
-                    System.out.println("4---isSignUpOrSignIn = " + isSignUpOrSignIn);
                     //
-                    isSignUpOrSignIn = true;
-                    System.out.println("5---isSignUpOrSignIn = " + isSignUpOrSignIn);
 //                    addUserToClientHandler();
                     try {
                         this.user = (User) objectInputStream.readObject();
@@ -88,7 +83,7 @@ public class ClientHandler implements Runnable {
                     }
                     userList.addUser(user);
                     clientHandlers.add(this);
-                    System.out.println("SERVER : " + user.getUserName() + "has entered the chat!");
+                    System.out.println("SERVER : " + user.getUserName() + " has entered the chat!");
                 }
                 //
                 System.out.println("online before" + user.getStatus() + "^^^" + user.getUserName());
@@ -283,4 +278,16 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public boolean checkClientHandler(String username){
+        for (ClientHandler clientHandler : clientHandlers){
+            if (clientHandler.getUser().getUserName().equals(username)){
+                return false;
+            }
+        }
+        return true;
+    }
 }
