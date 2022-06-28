@@ -107,4 +107,8 @@ public class User implements Serializable {
     public void addUserToHashMap (User user , PrivateChat privateChat) {
         userPrivateChatHashMap.put(user,privateChat);
     }
+
+    public HashMap<User, PrivateChat> getUserPrivateChatHashMap() {
+        return userPrivateChatHashMap;
+    }
 }

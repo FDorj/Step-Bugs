@@ -195,42 +195,70 @@ public class Client {
         }
     }
 
+    public PrivateChat getPrivateChatFromServer (User friend) {
+        PrivateChat privateChat = null;
+        try{
+            objectOutputStream.writeObject("PrivateChat " + friend.getUserName());
+            privateChat = (PrivateChat) objectInputStream.readObject();
+            return privateChat;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return privateChat;
+    }
 
-//    public void sendMessage () {
-//        try {
-//            objectOutputStream.writeObject(clientUserName);
-//
-//            Scanner scanner = new Scanner(System.in);
-//            while (socket.isConnected()) {
-//                String messageToSend = scanner.nextLine();
-//                objectOutputStream.writeObject(clientUserName + " : " + messageToSend);
-//            }
-//
-//        } catch (IOException e) {
-//            closeEveryThing(socket,objectInputStream,objectOutputStream);
-//        }
-//    }
-//
-//    public void listenForMessage () {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                String messageFromGroupChat;
-//                while (socket.isConnected()) {
-//                    try {
-////                        messageFromGroupChat = objectInputStream.readObject();
-////                        messageFromGroupChat = (String) temp;
-//                        messageFromGroupChat = (String) objectInputStream.readObject();
-////
-//                        System.out.println(messageFromGroupChat);
-//                    } catch (IOException | ClassNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
-//    }
-//
+    // sendMessage thread
+    public void sendMessage() {
+
+      new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+
+                    // read the message to deliver.
+                    Scanner scanner = new Scanner(System.in);
+                    String msg = scanner.nextLine();
+                    if (msg.equals("#exit")) {
+                        throw new RuntimeException();
+                    }
+
+                    try {
+                        // write on the output stream
+                        objectOutputStream.writeObject(msg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    // readMessage thread
+    public void readMessage() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (true) {
+                    try {
+                        // read the message sent to this client
+                        String msg = null;
+                        try {
+                            msg = (String) objectInputStream.readObject();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(msg);
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+
 //    public void closeEveryThing (Socket socket , ObjectInputStream objectInputStream , ObjectOutputStream objectOutputStream) {
 //        if (objectInputStream != null) {
 //            try {

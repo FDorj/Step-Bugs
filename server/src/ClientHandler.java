@@ -189,9 +189,9 @@ public class ClientHandler implements Runnable {
                         user.setFriends(friends);
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
 
-                        PrivateChat privateChat2 = new PrivateChat(user,userList.findUserByUsername(splitted[1]));
-                        user.addUserToHashMap(userList.findUserByUsername(splitted[1]),privateChat2);
-                        userList.findUserByUsername(splitted[1]).addUserToHashMap(user,privateChat2);
+                        PrivateChat privateChat = new PrivateChat(user,userList.findUserByUsername(splitted[1]));
+                        user.addUserToHashMap(userList.findUserByUsername(splitted[1]),privateChat);
+                        userList.findUserByUsername(splitted[1]).addUserToHashMap(user,privateChat);
 
                     }else{
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
@@ -213,6 +213,17 @@ public class ClientHandler implements Runnable {
                             user.setStatus(status);
                         }
                     }
+                }
+                else if (messageFromClient.startsWith("PrivateChat ")) {
+                    String friend = messageFromClient.substring(12);
+                    for (User user : user.getUserPrivateChatHashMap().keySet()){
+                        if (user.getUserName().equals(friend)){
+                            objectOutputStream.writeUnshared(user.getUserPrivateChatHashMap().get(user));
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("Pv")) {
+
                 }
 
                 }

@@ -112,7 +112,20 @@ public class InputHandler {
                                     printPvChatMenu();
                                     int pvMenu = Integer.parseInt(scanner.nextLine());
                                     if (pvMenu == 1) {
-                                        
+                                        PrivateChat privateChat = client.getPrivateChatFromServer(friends.get(whichFriend-1));
+                                        System.out.println("---------------------------------");
+                                        if (privateChat == null){
+                                            System.out.println("There is No Message!");
+                                        }else {
+                                            privateChat.printChat();
+                                        }
+                                        try {
+                                            client.sendMessage();
+                                        }catch (RuntimeException runtimeException){
+                                            System.out.println("omad biron");
+                                        }
+                                        client.readMessage();
+                                        System.out.println("---------------------------------");
                                     }
                                     else if (pvMenu == 2) {
 
@@ -344,5 +357,9 @@ public class InputHandler {
         System.out.println("2. Setting");
         System.out.println("3. Back to main menu");
     }
+
+
+
+
 
 }
