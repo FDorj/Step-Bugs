@@ -12,65 +12,75 @@ public class InputHandler {
     }
 
     public void handle () {
-        printFirstMenu();
-        boolean whileBoolean = true;
-        while (whileBoolean) {
-            Client client = null;
-            int input = Integer.parseInt(scanner.nextLine());
-            if (input == 1) {
-                System.out.print("Enter your username : ");
-                String userName = scanner.nextLine();
-                System.out.print("\nEnter your password : ");
-                String password = scanner.nextLine();
+        while (true) {
+            printFirstMenu();
+            boolean whileBoolean = true;
+            while (whileBoolean) {
+                Client client = null;
+                int input = Integer.parseInt(scanner.nextLine());
+                if (input == 1) {
+                    System.out.print("Enter your username : ");
+                    String userName = scanner.nextLine();
+                    System.out.print("\nEnter your password : ");
+                    String password = scanner.nextLine();
 
-                Socket socket = null;
-                try {
-                    socket = new Socket("localhost", 2000);
-                    client = new Client(socket);
-                    String serverMessage = client.signIn(userName, password);
-                    if (serverMessage.equals("UserNotFound")) {
-                        System.out.println("User not found!");
-                    } else if (serverMessage.equals("WrongPassword")) {
-                        System.out.println("Wrong password!");
-                    } else if (serverMessage.equals("SuccessfullySignedIn")) {
-                        System.out.println(":D Successfully signed in :D");
+                    Socket socket = null;
+                    try {
+                        socket = new Socket("localhost", 2000);
+                        client = new Client(socket);
+                        String serverMessage = client.signIn(userName, password);
+                        if (serverMessage.equals("UserNotFound")) {
+                            System.out.println("User not found!");
+                            break;
+                        } else if (serverMessage.equals("WrongPassword")) {
+                            System.out.println("Wrong password!");
+                            break;
+                        } else if (serverMessage.equals("SuccessfullySignedIn")) {
+                            System.out.println(":D Successfully signed in :D");
+                        } else if (serverMessage.equals("You are already in")) {
+                            System.out.println(serverMessage);
+                            break;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+
+                    //sign up
+                } else if (input == 2) {
+                    System.out.print("Enter a username : ");
+                    String userName = scanner.nextLine();
+                    System.out.print("\nEnter a password : ");
+                    String password = scanner.nextLine();
+                    System.out.print("\nEnter an email : ");
+                    String email = scanner.nextLine();
+                    System.out.print("\nEnter a phone number (optional) : ");
+                    System.out.println("Otherwise press enter");
+                    String phoneNumber = scanner.nextLine();
+                    String hashed = null;
+                    try {
+                        hashed = hashPassword(password);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                    //User user = new User(userName, hashed, email, phoneNumber);
+
+                    Socket socket = null;
+                    try {
+                        socket = new Socket("localhost", 2000);
+                        client = new Client(socket);
+                        if (client.checkUserName(userName)){
+                            System.out.println("This user already exists!");
+                            break;
+                        }
+                        User user = new User(userName, hashed, email, phoneNumber);
+                        client.signUp();
+                        client.addUserToClient(user);
+                        client.addUserToServer();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-
-                //sign up
-            } else if (input == 2) {
-                System.out.print("Enter a username : ");
-                String userName = scanner.nextLine();
-                System.out.print("\nEnter a password : ");
-                String password = scanner.nextLine();
-                System.out.print("\nEnter an email : ");
-                String email = scanner.nextLine();
-                System.out.print("\nEnter a phone number (optional) : ");
-                System.out.println("Otherwise press enter");
-                String phoneNumber = scanner.nextLine();
-                String hashed = null;
-                try {
-                    hashed = hashPassword(password);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                User user = new User(userName, hashed, email, phoneNumber);
-
-                Socket socket = null;
-                try {
-                    socket = new Socket("localhost", 2000);
-                    client = new Client(socket);
-                    client.signUp();
-                    client.addUserToClient(user);
-                    client.addUserToServer();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
 
 
                 while (!(false)) {
@@ -90,24 +100,45 @@ public class InputHandler {
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
                                 HashMap<User, Status> userStatusHashMap = client.friendList();
-                                for (User keyUser : userStatusHashMap.keySet()){
+                                ArrayList<User> friends = new ArrayList<>();
+                                for (User keyUser : userStatusHashMap.keySet()) {
+                                    friends.add(keyUser);
                                     System.out.println(i + ". " + keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
                                     i++;
                                 }
+                                System.out.println("Enter a number: ");
+                                int whichFriend = Integer.parseInt(scanner.nextLine());
+                                while (true) {
+                                    printPvChatMenu();
+                                    int pvMenu = Integer.parseInt(scanner.nextLine());
+                                    if (pvMenu == 1) {
+                                        
+                                    }
+                                    else if (pvMenu == 2) {
+
+                                    }
+                                    else if (pvMenu == 3) {
+                                        break;
+                                    }
+                                    else {
+                                        continue;
+                                    }
+                                }
+
                             }
-                        }else if (select == 2) {
-                            if(client.friendList().size() == 0){
+                        } else if (select == 2) {
+                            if (client.friendList().size() == 0) {
                                 System.out.println("Wumpus is waiting on friends. You don't have to though!");
                             } else {
                                 int i = 1;
-                                for (User onlineFriend : client.friendList().keySet()){
-                                    if(client.friendList().get(onlineFriend).equals(Status.ONLINE)){
+                                for (User onlineFriend : client.friendList().keySet()) {
+                                    if (client.friendList().get(onlineFriend).equals(Status.ONLINE)) {
                                         System.out.println(i + ". " + onlineFriend.getUserName() + "\n");
                                         i++;
                                     }
                                 }
                             }
-                        }else if (select == 3) {
+                        } else if (select == 3) {
                             while (true) {
                                 int i = 1;
                                 //print
@@ -127,17 +158,17 @@ public class InputHandler {
                                     if (pendingInput > 0 && pendingInput <= client.outGoingInviteList().size() + client.incomingInviteList().size()) {
                                         if (pendingInput <= client.incomingInviteList().size()) {
                                             int acceptOrReject = 0;
-                                            try{
+                                            try {
                                                 System.out.println("1.accept\t2.reject\t3.back to pending");
                                                 acceptOrReject = Integer.parseInt(scanner.nextLine());
-                                                if(!(acceptOrReject == 1 || acceptOrReject ==2 || acceptOrReject == 3)){
+                                                if (!(acceptOrReject == 1 || acceptOrReject == 2 || acceptOrReject == 3)) {
                                                     throw new ExceptionHandler();
                                                 }
-                                            }catch (ExceptionHandler exceptionHandler){
+                                            } catch (ExceptionHandler exceptionHandler) {
                                                 System.out.println("Invalid Input!");
                                                 continue;
                                             }
-                                            if (acceptOrReject == 3){
+                                            if (acceptOrReject == 3) {
                                                 continue;
                                             }
                                             client.acceptOrRejectIncoming(acceptOrReject, client.incomingInviteList().get(pendingInput - 1));
@@ -147,38 +178,38 @@ public class InputHandler {
                                             try {
                                                 System.out.println("1.cancel\t2.back to pending");
                                                 acceptOrReject = Integer.parseInt(scanner.nextLine());
-                                                if (!(acceptOrReject == 1 || acceptOrReject == 2)){
-                                                  throw new ExceptionHandler();
+                                                if (!(acceptOrReject == 1 || acceptOrReject == 2)) {
+                                                    throw new ExceptionHandler();
                                                 }
-                                            }catch (ExceptionHandler e){
+                                            } catch (ExceptionHandler e) {
                                                 System.out.println("Invalid Input");
                                                 continue;
                                             }
                                             client.acceptOrRejectOutGoing(acceptOrReject, client.outGoingInviteList().get(pendingInput - client.incomingInviteList().size() - 1));
                                             break;
                                         }
-                                    }else {
+                                    } else {
                                         throw new ExceptionHandler();
                                     }
-                                }catch (ExceptionHandler e){
+                                } catch (ExceptionHandler e) {
                                     System.out.println("Invalid Input! Try Again");
                                 }
                             }
 
 
-                        }else if (select == 4) {
+                        } else if (select == 4) {
                             System.out.println("Enter a user name: \n");
                             String friendToAdd = scanner.nextLine();
                             //System.out.println("1---" + client.checkUserName(friendToAdd));
-                            if(client.checkUserName(friendToAdd)) {
-                                if(!client.checkIsFriend(friendToAdd)) {
+                            if (client.checkUserName(friendToAdd)) {
+                                if (!client.checkIsFriend(friendToAdd)) {
                                     client.friendRequest(friendToAdd);
                                 }
                                 try {
-                                if (client.checkIsFriend(friendToAdd)) {
-                                    throw new ExceptionHandler();
-                                }
-                                    } catch (ExceptionHandler exceptionHandler) {
+                                    if (client.checkIsFriend(friendToAdd)) {
+                                        throw new ExceptionHandler();
+                                    }
+                                } catch (ExceptionHandler exceptionHandler) {
                                     System.out.println("This friend already exists");
                                 }
                             }
@@ -190,10 +221,10 @@ public class InputHandler {
                                 System.out.println("There is no such user");
                             }
 
-                        }else if (select == 5) {
+                        } else if (select == 5) {
                             continue;
                         }
-                    }else if(choice == 2){
+                    } else if (choice == 2) {
                         printServerMenu();
 //                        System.out.println("1.All servers");
 //                        System.out.println("2.Add server");
@@ -203,45 +234,43 @@ public class InputHandler {
                             int i = 1;
                             if (client.discordServersList().size() == 0) {
                                 System.out.println("There is no server!");
-                            }
-                            else {
+                            } else {
                                 for (DiscordServer discordServer : client.discordServersList()) {
                                     System.out.println(i + ". " + discordServer + "\n");
                                     i++;
                                 }
                             }
-                        }
-                        else if (select == 2) {
+                        } else if (select == 2) {
                             System.out.println("Enter a name for your sever:");
                             String serverName = scanner.nextLine();
                             client.addServer(serverName);
-                        }else if (select == 3) {
+                        } else if (select == 3) {
                             continue;
                         }
-                    }else if(choice == 3){
-                            int i = 1;
-                            if (client.blockedUserList().equals(null)) {
-                                System.out.println("There is no blocked user!");
-                            }
-                            for (User blockedUser : client.blockedUserList()) {
-                                System.out.println(i + ". " + blockedUser + "\n");
-                                i++;
-                            }
-                        }else if (choice == 4) {
+                    } else if (choice == 3) {
+                        int i = 1;
+                        if (client.blockedUserList().equals(null)) {
+                            System.out.println("There is no blocked user!");
+                        }
+                        for (User blockedUser : client.blockedUserList()) {
+                            System.out.println(i + ". " + blockedUser + "\n");
+                            i++;
+                        }
+                    } else if (choice == 4) {
                         printStatusMenu();
                         int status = Integer.parseInt(scanner.nextLine());
                         if (status == 1) {
                             client.setUserStatus(Status.ONLINE.name());
-                        }else if (status == 2) {
+                        } else if (status == 2) {
                             client.setUserStatus(Status.IDLE.name());
-                        }else if (status == 3) {
+                        } else if (status == 3) {
                             client.setUserStatus(Status.DO_NOT_DISTURB.name());
-                        }else if (status == 4) {
+                        } else if (status == 4) {
                             client.setUserStatus(Status.OFFLINE.name());
-                        }else {
+                        } else {
                             continue;
                         }
-                    }else if (choice == 5) {
+                    } else if (choice == 5) {
                         printSettingMenu();
 //                        System.out.println("1.My account");
 //                        System.out.println("2.User profile");
@@ -250,16 +279,17 @@ public class InputHandler {
                         int select = Integer.parseInt(scanner.nextLine());
                         if (select == 1) {
 
-                        }else if (select == 2) {
+                        } else if (select == 2) {
 
-                        }else if (select == 3) {
+                        } else if (select == 3) {
 
-                        }else if (select == 4) {
+                        } else if (select == 4) {
                             continue;
                         }
 
                     }
                 }
+            }
         }
     }
 
@@ -307,6 +337,12 @@ public class InputHandler {
         System.out.println("2.User profile");
         System.out.println("3.Log out");
         System.out.println("4.Back to main menu");
+    }
+
+    public void printPvChatMenu () {
+        System.out.println("1. Chat");
+        System.out.println("2. Setting");
+        System.out.println("3. Back to main menu");
     }
 
 }

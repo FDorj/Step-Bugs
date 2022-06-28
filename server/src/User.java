@@ -16,6 +16,7 @@ public class User implements Serializable {
     private HashSet<DiscordServer> discordServers;
     private HashSet<User> outGoingPending;
     private HashSet<User> inComingPending;
+    private HashMap<User , PrivateChat> userPrivateChatHashMap;
 
     public User(String userName, String hashedPassword, String email, String phoneNumber) {
         this.userName = userName;
@@ -29,6 +30,7 @@ public class User implements Serializable {
         this.discordServers = new HashSet<>();
         this.outGoingPending = new HashSet<>();
         this.inComingPending = new HashSet<>();
+        this.userPrivateChatHashMap = new HashMap<>();
 
     }
 
@@ -100,5 +102,9 @@ public class User implements Serializable {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public void addUserToHashMap (User user , PrivateChat privateChat) {
+        userPrivateChatHashMap.put(user,privateChat);
     }
 }

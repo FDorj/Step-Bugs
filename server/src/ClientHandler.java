@@ -51,31 +51,36 @@ public class ClientHandler implements Runnable {
         String messageFromClient;
         try {
             while (socket.isConnected()) {
-                signInOrSignUpMessage = (String) objectInputStream.readObject();
-                System.out.println("####" + signInOrSignUpMessage);
-                if (signInOrSignUpMessage.startsWith("SignIn")) {
+                messageFromClient = (String) objectInputStream.readObject();
+//                signInOrSignUpMessage = (String) objectInputStream.readObject();
+                if (messageFromClient.startsWith("SignIn")) {
 //                    addUserToClientHandler();
-                    String[] splittedMessage = signInOrSignUpMessage.split("\\s");
+                    String[] splittedMessage = messageFromClient.split("\\s");
                     String userName = splittedMessage[1];
                     if (!checkClientHandler(userName)){
                         objectOutputStream.writeObject("You are already in");
+                    }else {
+                        String password = splittedMessage[2];
+                        UserList userList = UserList.getInstance();
+                        if (!userList.checkUser(userName)) {
+                            objectOutputStream.writeObject("UserNotFound");
+                        } else if (!userList.checkPassword(password)) {
+                            objectOutputStream.writeObject("WrongPassword");
+                        } else {
+                            User signInUser = userList.findUserByUsername(userName);
+                            objectOutputStream.writeObject("SuccessfullySignedIn");
+                            this.user = signInUser;
+                            clientHandlers.add(this);
+                            System.out.println("SERVER : " + user.getUserName() + "has entered the chat!");
+                        }
+
+                        if (user.getStatus() == null) {
+                            user.setStatus(Status.ONLINE);
+                        }
                     }
-                    String password = splittedMessage[2];
-                    UserList userList = UserList.getInstance();
-                    if (!userList.checkUser(userName)){
-                        objectOutputStream.writeObject("UserNotFound");
-                    }else if (!userList.checkPassword(password)){
-                        objectOutputStream.writeObject("WrongPassword");
-                    }else{
-                        User signInUser = userList.findUserByUsername(userName);
-                        objectOutputStream.writeObject("SuccessfullySignedIn");
-                        this.user = signInUser;
-                        clientHandlers.add(this);
-                        System.out.println("SERVER : " + user.getUserName() + "has entered the chat!");
-                    }
-                }else if (signInOrSignUpMessage.startsWith("SignUp")) {
-                    //
-//                    addUserToClientHandler();
+                }else if (messageFromClient.startsWith("SignUp")) {
+//                    String userName =(String) objectInputStream.readObject();
+//                    objectOutputStream.writeObject(userList.checkUser(userName));
                     try {
                         this.user = (User) objectInputStream.readObject();
                     } catch (IOException | ClassNotFoundException e) {
@@ -84,18 +89,11 @@ public class ClientHandler implements Runnable {
                     userList.addUser(user);
                     clientHandlers.add(this);
                     System.out.println("SERVER : " + user.getUserName() + " has entered the chat!");
+                    if (user.getStatus() == null) {
+                        user.setStatus(Status.ONLINE);
+                    }
                 }
-                //
-                System.out.println("online before" + user.getStatus() + "^^^" + user.getUserName());
-                if (user.getStatus() == null) {
-                    user.setStatus(Status.ONLINE);
-                }
-                System.out.println("online after" + user.getStatus() + "^^^" + user.getUserName());
-                //
-                System.out.println("before mfc ");
-                messageFromClient = (String) objectInputStream.readObject();
-                System.out.println("after mfc");
-                if (messageFromClient.equals("Show friends list")) {
+                else if (messageFromClient.equals("Show friends list")) {
                     try {
                         HashSet<User> userHashSet = user.getFriends();
                         HashMap<User, Status> userStatusHashMap = new HashMap<>();
@@ -180,20 +178,21 @@ public class ClientHandler implements Runnable {
                     //accept
                     if(Integer.parseInt(splitted[2]) == 1){
                         //
-                        HashSet<User> friends2 = userList.findUserByUsername(splitted[1]).getFriends();
+                        HashSet<User> friends2 = userList.findUserByUsername(splitted[1]).getFriends();  //kasi ke add mishe
                         friends2.add(user);
                         userList.findUserByUsername(splitted[1]).setFriends(friends2);
-                        System.out.println("R ---> before(2) : " + userList.findUserByUsername(splitted[1]).getOutGoingPending());
                         userList.findUserByUsername(splitted[1]).removeOutGoingPending(user);
-                        System.out.println("R ---> after(2) : " + userList.findUserByUsername(splitted[1]).getOutGoingPending());
 
                         //
-                        HashSet<User> friends = user.getFriends();
+                        HashSet<User> friends = user.getFriends();    //kasi ke add mikne
                         friends.add(userList.findUserByUsername(splitted[1]));
                         user.setFriends(friends);
-                        System.out.println("R ---> before(1) : " + user.getInComingPending());
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
-                        System.out.println("R ---> after(1) : " + user.getInComingPending());
+
+                        PrivateChat privateChat2 = new PrivateChat(user,userList.findUserByUsername(splitted[1]));
+                        user.addUserToHashMap(userList.findUserByUsername(splitted[1]),privateChat2);
+                        userList.findUserByUsername(splitted[1]).addUserToHashMap(user,privateChat2);
+
                     }else{
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
                         //
