@@ -120,11 +120,11 @@ public class InputHandler {
                                             privateChat.printChat();
                                         }
                                         try {
-                                            client.sendMessage();
+                                            client.sendMessage(privateChat);
+                                            client.readMessage();
                                         }catch (RuntimeException runtimeException){
                                             System.out.println("omad biron");
                                         }
-                                        client.readMessage();
                                         System.out.println("---------------------------------");
                                     }
                                     else if (pvMenu == 2) {

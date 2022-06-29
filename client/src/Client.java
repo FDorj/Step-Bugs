@@ -208,23 +208,30 @@ public class Client {
     }
 
     // sendMessage thread
-    public void sendMessage() {
+    public void sendMessage(PrivateChat privateChat) {
 
       new Thread(new Runnable() {
             @Override
             public void run() {
+                String type = "pv";
+                try {
+                    objectOutputStream.writeObject(type);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 while (true) {
 
                     // read the message to deliver.
                     Scanner scanner = new Scanner(System.in);
                     String msg = scanner.nextLine();
+                    Message message = new Message(user, privateChat.getReceiver(), msg);
                     if (msg.equals("#exit")) {
                         throw new RuntimeException();
                     }
 
                     try {
                         // write on the output stream
-                        objectOutputStream.writeObject(msg);
+                        objectOutputStream.writeObject(message);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -242,9 +249,9 @@ public class Client {
                 while (true) {
                     try {
                         // read the message sent to this client
-                        String msg = null;
+                        Message msg = null;
                         try {
-                            msg = (String) objectInputStream.readObject();
+                            msg = (Message) objectInputStream.readObject();
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }

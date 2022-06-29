@@ -17,4 +17,8 @@ public class PrivateChat implements Serializable {
             System.out.println(message);
         }
     }
+
+    public User getReceiver() {
+        return receiver;
+    }
 }
