@@ -21,4 +21,8 @@ public class PrivateChat implements Serializable {
     public User getReceiver() {
         return receiver;
     }
+
+    public User getSender() {
+        return sender;
+    }
 }

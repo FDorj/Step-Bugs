@@ -190,8 +190,11 @@ public class ClientHandler implements Runnable {
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
 
                         PrivateChat privateChat = new PrivateChat(user,userList.findUserByUsername(splitted[1]));
+                        System.out.println(privateChat);
                         user.addUserToHashMap(userList.findUserByUsername(splitted[1]),privateChat);
+                        System.out.println("1)))))))))))))))) " + user.getUserPrivateChatHashMap().get(userList.findUserByUsername(splitted[1])));
                         userList.findUserByUsername(splitted[1]).addUserToHashMap(user,privateChat);
+                        System.out.println();
 
                     }else{
                         user.removeIncomingPending(userList.findUserByUsername(splitted[1]));
@@ -216,9 +219,19 @@ public class ClientHandler implements Runnable {
                 }
                 else if (messageFromClient.startsWith("PrivateChat ")) {
                     String friend = messageFromClient.substring(12);
+                    System.out.println("123456789");
+
                     for (User user : user.getUserPrivateChatHashMap().keySet()){
+                        System.out.println("999999 " + user.getUserPrivateChatHashMap());
+                        System.out.println("1*** " + user.getUserName());
                         if (user.getUserName().equals(friend)){
-                            objectOutputStream.writeUnshared(user.getUserPrivateChatHashMap().get(user));
+                            System.out.println("888888 " + user.getUserPrivateChatHashMap());
+                            System.out.println("777777 " + this.user.getUserPrivateChatHashMap());
+                            System.out.println("2*** " + user.getUserName());
+                            System.out.println("666666 " + this.user.getUserPrivateChatHashMap().get(user));
+                            objectOutputStream.writeUnshared(this.user.getUserPrivateChatHashMap().get(user));
+                            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + user.getUserPrivateChatHashMap().get(user));
+                            System.out.println("3*** " + user.getUserName());
                         }
                     }
                 }
@@ -230,7 +243,7 @@ public class ClientHandler implements Runnable {
                         }
                         for (ClientHandler clientHandler : clientHandlers){
                             if (clientHandler.getUser().getUserName().equals(message.getReceiver().getUserName())){
-                                Message message1 = new Message(message.getReceiver(), user, message.getText());
+                                Message message1 = new Message(user, message.getReceiver(), message.getText());
                                 clientHandler.objectOutputStream.writeObject(message1);
                             }
                         }

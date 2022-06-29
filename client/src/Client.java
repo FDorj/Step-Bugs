@@ -207,62 +207,14 @@ public class Client {
         return privateChat;
     }
 
-    // sendMessage thread
-    public void sendMessage(PrivateChat privateChat) {
-
-      new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String type = "pv";
-                try {
-                    objectOutputStream.writeObject(type);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                while (true) {
-
-                    // read the message to deliver.
-                    Scanner scanner = new Scanner(System.in);
-                    String msg = scanner.nextLine();
-                    Message message = new Message(user, privateChat.getReceiver(), msg);
-                    if (msg.equals("#exit")) {
-                        throw new RuntimeException();
-                    }
-
-                    try {
-                        // write on the output stream
-                        objectOutputStream.writeObject(message);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+    public void sendMessage(PrivateChat privateChat){
+        Thread t = new Thread(new SendMessage(privateChat, objectOutputStream));
+        t.start();
     }
 
-    // readMessage thread
-    public void readMessage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                while (true) {
-                    try {
-                        // read the message sent to this client
-                        Message msg = null;
-                        try {
-                            msg = (Message) objectInputStream.readObject();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println(msg);
-                    } catch (IOException e) {
-
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+    public void readMessage(){
+        Thread t = new Thread(new ReadMessage(objectInputStream));
+        t.start();
     }
 
 

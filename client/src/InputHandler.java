@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
@@ -120,8 +121,11 @@ public class InputHandler {
                                             privateChat.printChat();
                                         }
                                         try {
+                                            System.out.println("1---");
                                             client.sendMessage(privateChat);
+                                            System.out.println("2---");
                                             client.readMessage();
+                                            System.out.println("3---");
                                         }catch (RuntimeException runtimeException){
                                             System.out.println("omad biron");
                                         }
