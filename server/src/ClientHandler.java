@@ -107,14 +107,14 @@ public class ClientHandler implements Runnable {
                 }
                 else if (messageFromClient.equals("Show servers list")) {
                     try {
-                        objectOutputStream.writeObject(user.getDiscordServers());
+                        objectOutputStream.writeUnshared(user.getDiscordServers());
                     } catch (IOException e) {
                         closeEveryThing(socket,objectInputStream,objectOutputStream);
                     }
                 }
                 else if (messageFromClient.equals("Show blocked users list")) {
                     try {
-                        objectOutputStream.writeObject(user.getBlocked());
+                        objectOutputStream.writeUnshared(user.getBlocked());
                     } catch (IOException e) {
                         closeEveryThing(socket,objectInputStream,objectOutputStream);
                     }
@@ -238,13 +238,30 @@ public class ClientHandler implements Runnable {
                 else if (messageFromClient.startsWith("pv")) {
                     while (true){
                         Message message = (Message) objectInputStream.readObject();
+                        String receiver = messageFromClient.substring(3);
                         if (message.getText().equals("#exit")){
                             break;
                         }
                         for (ClientHandler clientHandler : clientHandlers){
-                            if (clientHandler.getUser().getUserName().equals(message.getReceiver().getUserName())){
-                                Message message1 = new Message(user, message.getReceiver(), message.getText());
-                                clientHandler.objectOutputStream.writeObject(message1);
+                            if (clientHandler.getUser().getUserName().equals(receiver)){
+//                                Message message1 = new Message(user, message.getReceiver(), message.getText());
+                                clientHandler.objectOutputStream.writeObject(message);
+                                System.out.println("Message sent");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("serverMessage")) {
+                    String[] arrString = messageFromClient.split(":");
+                    String userName = arrString[1];
+                    String messageToSend = arrString[2];
+                    for (ClientHandler clientHandler1 : clientHandlers) {
+                        if (!clientHandler1.user.getUserName().equals(userName)) {
+                            try {
+                                clientHandler1.objectOutputStream.writeObject(messageToSend);
+                            } catch (IOException e) {
+                                closeEveryThing (socket,objectInputStream,objectOutputStream);
                             }
                         }
                     }

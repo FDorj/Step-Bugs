@@ -6,10 +6,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class InputHandler {
-    private Scanner scanner;
+    public static Scanner scanner = new Scanner(System.in);
 
-    public InputHandler(Scanner scanner) {
-        this.scanner = scanner;
+
+    public InputHandler() {
     }
 
     public void handle () {
@@ -114,22 +114,24 @@ public class InputHandler {
                                     int pvMenu = Integer.parseInt(scanner.nextLine());
                                     if (pvMenu == 1) {
                                         PrivateChat privateChat = client.getPrivateChatFromServer(friends.get(whichFriend-1));
+                                        System.out.println("f = " + friends.get(whichFriend-1).getUserName());
                                         System.out.println("---------------------------------");
                                         if (privateChat == null){
                                             System.out.println("There is No Message!");
                                         }else {
                                             privateChat.printChat();
                                         }
-                                        try {
-                                            System.out.println("1---");
-                                            client.sendMessage(privateChat);
-                                            System.out.println("2---");
-                                            client.readMessage();
-                                            System.out.println("3---");
-                                        }catch (RuntimeException runtimeException){
-                                            System.out.println("omad biron");
+                                        {
+                                            try {
+                                                client.sendMessage(client, privateChat, friends.get(whichFriend-1));
+                                            } catch (RuntimeException runtimeException) {
+                                                System.out.println("omad biron");
+                                                break;
+                                            }
+
                                         }
-                                        System.out.println("---------------------------------");
+                                        System.out.println("[][][][]" + privateChat.getMessages());
+
                                     }
                                     else if (pvMenu == 2) {
 
@@ -246,6 +248,8 @@ public class InputHandler {
 //                        System.out.println("1.All servers");
 //                        System.out.println("2.Add server");
 //                        System.out.println("3.Back to main menu");
+
+                        ArrayList<DiscordServer> allServers = new ArrayList<>();
                         int select = Integer.parseInt(scanner.nextLine());
                         if (select == 1) {
                             int i = 1;
@@ -253,8 +257,20 @@ public class InputHandler {
                                 System.out.println("There is no server!");
                             } else {
                                 for (DiscordServer discordServer : client.discordServersList()) {
-                                    System.out.println(i + ". " + discordServer + "\n");
+                                    allServers.add(discordServer);
+                                    System.out.println(i + ". " + discordServer.getName() + "\n");
                                     i++;
+                                }
+
+                                System.out.println("Enter a number: ");
+                                int whichServer = Integer.parseInt(scanner.nextLine());
+                                while (true) {
+                                    printServerChatMenu();
+                                    int serverChat = Integer.parseInt(scanner.nextLine());
+                                    if (serverChat == 1) {
+                                        //text channel
+                                        client.sendMessageInServer();
+                                    }
                                 }
                             }
                         } else if (select == 2) {
@@ -266,7 +282,7 @@ public class InputHandler {
                         }
                     } else if (choice == 3) {
                         int i = 1;
-                        if (client.blockedUserList().equals(null)) {
+                        if (client.blockedUserList().size() == 0) {
                             System.out.println("There is no blocked user!");
                         }
                         for (User blockedUser : client.blockedUserList()) {
@@ -362,6 +378,13 @@ public class InputHandler {
         System.out.println("3. Back to main menu");
     }
 
+    public void printServerChatMenu () {
+        System.out.println("1. Show Text Channels");
+        System.out.println("2. Show Voice Channels");
+        System.out.println("3. Add Channel");
+        System.out.println("4. Setting");
+        System.out.println("5. Back to main menu");
+    }
 
 
 

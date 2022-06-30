@@ -3,9 +3,11 @@ import java.io.ObjectInputStream;
 
 public class ReadMessage implements Runnable {
     private ObjectInputStream objectInputStream;
+    private PrivateChat privateChat;
 
-    public ReadMessage(ObjectInputStream objectInputStream) {
+    public ReadMessage(ObjectInputStream objectInputStream , PrivateChat privateChat) {
         this.objectInputStream = objectInputStream;
+        this.privateChat = privateChat;
     }
 
     @Override
@@ -13,10 +15,13 @@ public class ReadMessage implements Runnable {
         while (true) {
             try {
                 // read the message sent to this client
-                System.out.println("2@@@Read Message ");
                 Message msg = null;
                 try {
                     msg = (Message) objectInputStream.readObject();
+//                    if (!msg.equals("#exit")) {
+//                        privateChat.addMessage(msg);
+//                    }
+                    System.out.println("{{{{" + privateChat.getMessages());
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

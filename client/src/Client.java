@@ -24,6 +24,10 @@ public class Client {
         }
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void addUserToClient(User user){
         this.user = user;
     }
@@ -207,14 +211,25 @@ public class Client {
         return privateChat;
     }
 
-    public void sendMessage(PrivateChat privateChat){
-        Thread t = new Thread(new SendMessage(privateChat, objectOutputStream));
-        t.start();
+    public void sendMessage(Client client, PrivateChat privateChat, User friend){
+       new SendMessage(privateChat, objectOutputStream, client, friend).run();
     }
 
-    public void readMessage(){
-        Thread t = new Thread(new ReadMessage(objectInputStream));
+    public Thread readMessage(PrivateChat privateChat){
+        Thread t = new Thread(new ReadMessage(objectInputStream,privateChat));
         t.start();
+        return t;
+    }
+
+    public void sendMessageInServer () {
+        while (socket.isConnected()) {
+            String messageToSend = InputHandler.scanner.nextLine();
+            try {
+                objectOutputStream.writeObject("serverMessage:" + user.getUserName() + " : " + messageToSend);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

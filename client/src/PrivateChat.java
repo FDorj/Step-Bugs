@@ -2,13 +2,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PrivateChat implements Serializable {
-    private User sender;
-    private User receiver;
+    private User userA;
+    private User userB;
     private ArrayList<Message> messages;
 
     public PrivateChat(User sender, User receiver) {
-        this.sender = sender;
-        this.receiver = receiver;
+        this.userA = sender;
+        this.userB = receiver;
         this.messages = new ArrayList<>();
     }
 
@@ -18,11 +18,19 @@ public class PrivateChat implements Serializable {
         }
     }
 
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void addMessage (Message message) {
+        messages.add(message);
+    }
+
     public User getReceiver() {
-        return receiver;
+        return userB;
     }
 
     public User getSender() {
-        return sender;
+        return userA;
     }
 }

@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class DiscordServer implements Serializable {
     private String name;
@@ -16,4 +17,15 @@ public class DiscordServer implements Serializable {
         this.channels = new HashSet<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void addMember (User user) {
+        this.allServerUsers.add(user);
+    }
+
+    public void removeMember (User user) {
+        this.allServerUsers.remove(user);
+    }
 }
