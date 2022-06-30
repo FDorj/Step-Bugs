@@ -122,12 +122,12 @@ public class InputHandler {
                                             privateChat.printChat();
                                         }
                                         {
-                                            try {
-                                                client.sendMessage(client, privateChat, friends.get(whichFriend-1));
-                                            } catch (RuntimeException runtimeException) {
+                                            boolean flag = client.sendMessage(client, privateChat, friends.get(whichFriend-1));
+                                            if(!flag) {
                                                 System.out.println("omad biron");
                                                 break;
                                             }
+
 
                                         }
                                         System.out.println("[][][][]" + privateChat.getMessages());

@@ -7,6 +7,7 @@ public class SendMessage implements Runnable {
     private ObjectOutputStream objectOutputStream;
     private Client client;
     private User friend;
+    private boolean flag = true;
 
     public SendMessage(PrivateChat privateChat, ObjectOutputStream objectOutputStream, Client client, User friend) {
         this.privateChat = privateChat;
@@ -26,11 +27,12 @@ public class SendMessage implements Runnable {
         }
         System.out.println("&&&&" + privateChat.getMessages());
         Thread t= client.readMessage(privateChat);
-        while (true) {
+        String msg = null;
+        do {
 
             // read the message to deliver.
             Scanner scanner = InputHandler.scanner;
-            String msg = scanner.nextLine();
+            msg = scanner.nextLine();
             System.out.println("***" + client.getUser());
             Message message = new Message(client.getUser() , msg);
             System.out.println("**" + message.getSender().getUserName());
@@ -46,10 +48,17 @@ public class SendMessage implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (msg.equals("#exit")) {
-                t.interrupt();
-                throw new RuntimeException();
-            }
+//            if (msg.equals("#exit")) {
+//                t.interrupt();
+//                throw new RuntimeException();
+//            }
+        }while (!msg.equals("#exit"));
+        if (msg.equals("#exit")){
+            flag = false;
         }
+    }
+
+    public boolean isFlag() {
+        return flag;
     }
 }

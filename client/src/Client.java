@@ -211,8 +211,10 @@ public class Client {
         return privateChat;
     }
 
-    public void sendMessage(Client client, PrivateChat privateChat, User friend){
-       new SendMessage(privateChat, objectOutputStream, client, friend).run();
+    public boolean sendMessage(Client client, PrivateChat privateChat, User friend){
+       SendMessage sendMessage = new SendMessage(privateChat, objectOutputStream, client, friend);
+       sendMessage.run();
+       return sendMessage.isFlag();
     }
 
     public Thread readMessage(PrivateChat privateChat){

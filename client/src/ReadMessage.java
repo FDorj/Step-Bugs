@@ -12,15 +12,19 @@ public class ReadMessage implements Runnable {
 
     @Override
     public void run() {
+
         while (true) {
+            Message msg = null;
             try {
                 // read the message sent to this client
-                Message msg = null;
                 try {
                     msg = (Message) objectInputStream.readObject();
 //                    if (!msg.equals("#exit")) {
 //                        privateChat.addMessage(msg);
 //                    }
+                    if (msg.equals("#exit")){
+                        break;
+                    }
                     System.out.println("{{{{" + privateChat.getMessages());
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

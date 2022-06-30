@@ -236,21 +236,21 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 else if (messageFromClient.startsWith("pv")) {
-                    while (true){
+//                    while (true){
                         Message message = (Message) objectInputStream.readObject();
                         String receiver = messageFromClient.substring(3);
-                        if (message.getText().equals("#exit")){
-                            break;
-                        }
+//                        if (message.getText().equals("#exit")){
+//                            break;
+//                        }
                         for (ClientHandler clientHandler : clientHandlers){
                             if (clientHandler.getUser().getUserName().equals(receiver)){
 //                                Message message1 = new Message(user, message.getReceiver(), message.getText());
                                 clientHandler.objectOutputStream.writeObject(message);
                                 System.out.println("Message sent");
-                                break;
+//                                break;
                             }
                         }
-                    }
+//                    }
                 }
                 else if (messageFromClient.startsWith("serverMessage")) {
                     String[] arrString = messageFromClient.split(":");
