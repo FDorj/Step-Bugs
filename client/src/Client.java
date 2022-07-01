@@ -256,6 +256,14 @@ public class Client {
         return textChannels;
     }
 
+    public void textChannelChat(DiscordServer discordServer, TextChannel textChannel){
+        try {
+            objectOutputStream.writeObject("TextChannelChat " + discordServer.getName() + " " + textChannel.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 //    public void closeEveryThing (Socket socket , ObjectInputStream objectInputStream , ObjectOutputStream objectOutputStream) {
 //        if (objectInputStream != null) {

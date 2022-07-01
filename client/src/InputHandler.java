@@ -286,7 +286,16 @@ public class InputHandler {
                                             if (whichChannel == j){
                                                 continue;
                                             }else {
-                                                //
+                                                printPvChatMenu();
+                                                int chatMenuChoice = Integer.parseInt(scanner.nextLine());
+                                                if (chatMenuChoice == 1){
+                                                    System.out.println("------------------------------------");
+
+                                                }else if (chatMenuChoice == 2){
+
+                                                }else if (chatMenuChoice == 3){
+                                                    continue;
+                                                }
                                             }
 
                                         }
