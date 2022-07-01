@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 public class Client {
     private Socket socket;
@@ -219,8 +220,20 @@ public class Client {
        return sendMessage.isFlag();
     }
 
+    public boolean sendMessage (DiscordServer discordServer , TextChannel textChannel , Client client) {
+        SendMessage sendMessage = new SendMessage(discordServer,textChannel,client,objectOutputStream);
+        sendMessage.run();
+        return sendMessage.isFlag();
+    }
+
     public Thread readMessage(PrivateChat privateChat){
         Thread t = new ReadMessage(objectInputStream,privateChat);
+        t.start();
+        return t;
+    }
+
+    public Thread readMessage (DiscordServer discordServer , TextChannel textChannel) {
+        Thread t = new ReadMessage(objectInputStream,discordServer,textChannel);
         t.start();
         return t;
     }
@@ -262,6 +275,18 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean patternMatches (String input, String regexPattern) {
+        boolean isMatch = false;
+        try {
+            objectOutputStream.writeObject("Regex " + input + " " + regexPattern);
+            isMatch = (boolean) objectInputStream.readObject();
+            return isMatch;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isMatch;
     }
 
 

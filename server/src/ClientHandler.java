@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 public class ClientHandler implements Runnable {
 
@@ -266,7 +267,8 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     }
-                }else if (messageFromClient.startsWith("TextChannelList")){
+                }
+                else if (messageFromClient.startsWith("TextChannelList")){
                     String serverName = messageFromClient.substring(16);
                     for (DiscordServer discordServer : user.getDiscordServers()){
                         if (discordServer.getName().equals(serverName)){
@@ -274,7 +276,37 @@ public class ClientHandler implements Runnable {
                         }
                     }
                 }
-
+                else if (messageFromClient.startsWith("textChannelChat")) {
+                    String[] split = messageFromClient.split("\\s");
+                    while (true) {
+                        Message message = (Message) objectInputStream.readObject();
+                        if (message.getText().equals("#exit")) {
+                            objectOutputStream.writeUnshared(new Message(message.getSender(), message.getText()));
+                            break;
+                        }
+                        for (ClientHandler clientHandler1 : clientHandlers) {
+                            if (!clientHandler1.getUser().getUserName().equals(this.user.getUserName())) {
+                                try {
+                                    clientHandler1.objectOutputStream.writeObject(message);
+                                } catch (IOException e) {
+                                    closeEveryThing(socket, objectInputStream, objectOutputStream);
+                                }
+                                System.out.println("Channel - Chat - Message - Sent");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("Regex")) {
+                    String[] split = messageFromClient.split("\\s");
+                    System.out.println("1)" + messageFromClient);
+                    System.out.println("2)" + split[1]);
+                    System.out.println("3)" + split[2]);
+                    String input = split[1];
+                    String regexPattern = split[2];
+                    boolean isMatch = Pattern.compile(regexPattern).matcher(input).matches();
+                    objectOutputStream.writeObject(isMatch);
+                }
                 }
 //                broadCastMessage(messageFromClient);
             } catch (IOException | ClassNotFoundException ioException) {

@@ -5,10 +5,18 @@ public class ReadMessage extends Thread {
     public static Thread thread;
     private ObjectInputStream objectInputStream;
     private PrivateChat privateChat;
+    private DiscordServer discordServer;
+    private TextChannel textChannel;
 
     public ReadMessage(ObjectInputStream objectInputStream , PrivateChat privateChat) {
         this.objectInputStream = objectInputStream;
         this.privateChat = privateChat;
+    }
+
+    public ReadMessage (ObjectInputStream objectInputStream , DiscordServer discordServer , TextChannel textChannel) {
+        this.objectInputStream = objectInputStream;
+        this.discordServer = discordServer;
+        this.textChannel = textChannel;
     }
 
     @Override
@@ -24,7 +32,6 @@ public class ReadMessage extends Thread {
                         break;
                     }
                     msg = (Message) objectInputStream.readObject();
-                    System.out.println("{{{{" + privateChat.getMessages());
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
