@@ -219,38 +219,39 @@ public class ClientHandler implements Runnable {
                 }
                 else if (messageFromClient.startsWith("PrivateChat ")) {
                     String friend = messageFromClient.substring(12);
-                    System.out.println("123456789");
+//                    System.out.println("123456789");
 
                     for (User user : user.getUserPrivateChatHashMap().keySet()){
-                        System.out.println("999999 " + user.getUserPrivateChatHashMap());
-                        System.out.println("1*** " + user.getUserName());
+//                        System.out.println("999999 " + user.getUserPrivateChatHashMap());
+//                        System.out.println("1*** " + user.getUserName());
                         if (user.getUserName().equals(friend)){
-                            System.out.println("888888 " + user.getUserPrivateChatHashMap());
-                            System.out.println("777777 " + this.user.getUserPrivateChatHashMap());
+//                            System.out.println("888888 " + user.getUserPrivateChatHashMap());
+//                            System.out.println("777777 " + this.user.getUserPrivateChatHashMap());
                             System.out.println("2*** " + user.getUserName());
-                            System.out.println("666666 " + this.user.getUserPrivateChatHashMap().get(user));
+//                            System.out.println("666666 " + this.user.getUserPrivateChatHashMap().get(user));
                             objectOutputStream.writeUnshared(this.user.getUserPrivateChatHashMap().get(user));
-                            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + user.getUserPrivateChatHashMap().get(user));
+//                            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + user.getUserPrivateChatHashMap().get(user));
                             System.out.println("3*** " + user.getUserName());
                         }
                     }
                 }
                 else if (messageFromClient.startsWith("pv")) {
-//                    while (true){
+                    while (true){
                         Message message = (Message) objectInputStream.readObject();
                         String receiver = messageFromClient.substring(3);
-//                        if (message.getText().equals("#exit")){
-//                            break;
-//                        }
+                        if (message.getText().equals("#exit")){
+                            objectOutputStream.writeUnshared(new Message(message.getSender(), message.getText()));
+                            break;
+                        }
                         for (ClientHandler clientHandler : clientHandlers){
                             if (clientHandler.getUser().getUserName().equals(receiver)){
 //                                Message message1 = new Message(user, message.getReceiver(), message.getText());
                                 clientHandler.objectOutputStream.writeObject(message);
                                 System.out.println("Message sent");
-//                                break;
+                                break;
                             }
                         }
-//                    }
+                    }
                 }
                 else if (messageFromClient.startsWith("serverMessage")) {
                     String[] arrString = messageFromClient.split(":");
@@ -263,6 +264,13 @@ public class ClientHandler implements Runnable {
                             } catch (IOException e) {
                                 closeEveryThing (socket,objectInputStream,objectOutputStream);
                             }
+                        }
+                    }
+                }else if (messageFromClient.startsWith("TextChannelList")){
+                    String serverName = messageFromClient.substring(16);
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(serverName)){
+                            objectOutputStream.writeObject(discordServer.getChannels());
                         }
                     }
                 }

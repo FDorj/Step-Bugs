@@ -21,15 +21,15 @@ public class SendMessage implements Runnable {
     public void run() {
         String type = "pv";
         try {
-            objectOutputStream.writeObject(type + " " + friend.getUserName());
+            objectOutputStream.writeUnshared(type + " " + friend.getUserName());
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("&&&&" + privateChat.getMessages());
         Thread t= client.readMessage(privateChat);
-        String msg = null;
-        do {
 
+        while (true){
+            String msg = null;
             // read the message to deliver.
             Scanner scanner = InputHandler.scanner;
             msg = scanner.nextLine();
@@ -44,17 +44,17 @@ public class SendMessage implements Runnable {
 //                if (!message.equals("#exit")) {
 //                    privateChat.addMessage(message);
 //                }
-                objectOutputStream.writeObject(message);
+                objectOutputStream.writeUnshared(message);
+                if (msg.equals("#exit")) {
+                    t.interrupt();
+                    flag = false;
+                    break;
+//                throw new RuntimeException();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            if (msg.equals("#exit")) {
-//                t.interrupt();
-//                throw new RuntimeException();
-//            }
-        }while (!msg.equals("#exit"));
-        if (msg.equals("#exit")){
-            flag = false;
+
         }
     }
 

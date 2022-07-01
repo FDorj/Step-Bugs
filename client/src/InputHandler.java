@@ -125,6 +125,7 @@ public class InputHandler {
                                             boolean flag = client.sendMessage(client, privateChat, friends.get(whichFriend-1));
                                             if(!flag) {
                                                 System.out.println("omad biron");
+
                                                 break;
                                             }
 
@@ -268,8 +269,27 @@ public class InputHandler {
                                     printServerChatMenu();
                                     int serverChat = Integer.parseInt(scanner.nextLine());
                                     if (serverChat == 1) {
+                                        ArrayList<TextChannel> textChannelArrayList = new ArrayList<>();
                                         //text channel
-                                        client.sendMessageInServer();
+                                        if (client.textChannelList(allServers.get(whichServer)).size() == 0){
+                                            System.out.println("There is not any Channel in this server");
+                                            break;
+                                        }else {
+                                            int j = 1;
+                                            for (TextChannel textChannel : client.textChannelList(allServers.get(whichServer))){
+                                                textChannelArrayList.add(textChannel);
+                                                System.out.println(j + ". " + textChannel.getName());
+                                                j++;
+                                            }
+                                            System.out.println(j + ". back");
+                                            int whichChannel = Integer.parseInt(scanner.nextLine());
+                                            if (whichChannel == j){
+                                                continue;
+                                            }else {
+                                                //
+                                            }
+
+                                        }
                                     }
                                 }
                             }

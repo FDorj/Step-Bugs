@@ -1,7 +1,8 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class ReadMessage implements Runnable {
+public class ReadMessage extends Thread {
+    public static Thread thread;
     private ObjectInputStream objectInputStream;
     private PrivateChat privateChat;
 
@@ -12,19 +13,17 @@ public class ReadMessage implements Runnable {
 
     @Override
     public void run() {
+        thread = this;
 
         while (true) {
             Message msg = null;
             try {
                 // read the message sent to this client
                 try {
-                    msg = (Message) objectInputStream.readObject();
-//                    if (!msg.equals("#exit")) {
-//                        privateChat.addMessage(msg);
-//                    }
-                    if (msg.equals("#exit")){
+                    if (isInterrupted()){
                         break;
                     }
+                    msg = (Message) objectInputStream.readObject();
                     System.out.println("{{{{" + privateChat.getMessages());
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();

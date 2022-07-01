@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,7 +5,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Scanner;
 
 public class Client {
     private Socket socket;
@@ -65,8 +63,12 @@ public class Client {
     public HashMap<User, Status> friendList () {
         HashMap<User, Status> friends = null;
         try {
-            objectOutputStream.writeObject("Show friends list");
+            System.out.println("dar client ghabl az write");
+            objectOutputStream.writeUnshared("Show friends list");
+            System.out.println("dar client ghabl az read");
             friends = (HashMap<User, Status>) objectInputStream.readObject();
+            System.out.println(friends.size());
+            System.out.println("dar client bad az read");
             System.out.println("77777&&&&& " + user.getFriends().size());
             return friends;
         } catch (IOException | ClassNotFoundException e) {
@@ -218,7 +220,7 @@ public class Client {
     }
 
     public Thread readMessage(PrivateChat privateChat){
-        Thread t = new Thread(new ReadMessage(objectInputStream,privateChat));
+        Thread t = new ReadMessage(objectInputStream,privateChat);
         t.start();
         return t;
     }
@@ -232,6 +234,26 @@ public class Client {
                 e.printStackTrace();
             }
         }
+    }
+
+    public HashSet<TextChannel> textChannelList(DiscordServer discordServer){
+        HashSet<Channel> channels = null;
+        try {
+            objectOutputStream.writeObject("TextChannelList " + discordServer.getName());
+            channels = (HashSet<Channel>) objectInputStream.readObject();
+//            return textChannels;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        HashSet<TextChannel> textChannels = new HashSet<>();
+        for (Channel channel : channels){
+            if (channel instanceof TextChannel){
+                textChannels.add((TextChannel) channel);
+            }
+        }
+        return textChannels;
     }
 
 

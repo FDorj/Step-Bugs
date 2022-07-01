@@ -28,4 +28,8 @@ public class DiscordServer implements Serializable {
     public void removeMember (User user) {
         this.allServerUsers.remove(user);
     }
+
+    public HashSet<Channel> getChannels() {
+        return channels;
+    }
 }
