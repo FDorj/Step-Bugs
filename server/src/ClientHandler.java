@@ -420,7 +420,7 @@ public class ClientHandler implements Runnable {
                     String friendUserName = split[1];
                     for (User user : user.getUserPrivateChatHashMap().keySet()){
                         if (user.getUserName().equals(friendUserName)){
-                            objectOutputStream.writeUnshared(user.getUserPrivateChatHashMap().get(user).getMessages());
+                            objectOutputStream.writeUnshared(this.user.getUserPrivateChatHashMap().get(user).getMessages());
                         }
                     }
                 }

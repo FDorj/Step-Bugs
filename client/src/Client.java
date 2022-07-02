@@ -467,7 +467,11 @@ public class Client {
         }
     }
 
-<<<<<<< HEAD
+    /**
+     * This method gets privateChat history from server
+     * @param friend
+     * @return
+     */
     public ArrayList<Message> privateChatHistory(User friend){
         ArrayList<Message> messageArrayList = null;
         try {
@@ -479,6 +483,12 @@ public class Client {
         return messageArrayList;
     }
 
+    /**
+     * This method gets text channel chat history from server
+     * @param discordServer
+     * @param textChannel
+     * @return
+     */
     public ArrayList<Message> textChannelChatHistory(DiscordServer discordServer, TextChannel textChannel){
         ArrayList<Message> messageArrayList = null;
         try {
@@ -490,12 +500,10 @@ public class Client {
         return messageArrayList;
     }
 
-=======
     /**
      * This method set the path of photo.
      * @param photoPath
      */
->>>>>>> 7fb1704810655601ddd99606fb01c44c5c5d4691
     public void setPhotoPath (String photoPath) {
         String string = null;
         InputStream inputStream = null;

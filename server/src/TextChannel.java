@@ -27,17 +27,14 @@ public class TextChannel extends Channel implements Serializable {
     public void addToMessages(Message message){
         allMessages.add(message);
     }
-<<<<<<< HEAD
 
     public ArrayList<Message> getAllMessages() {
         return allMessages;
     }
 
-=======
     /**
      * This method for read message.
      */
->>>>>>> 7fb1704810655601ddd99606fb01c44c5c5d4691
     public void saveAllMessage () {
         try {
             this.fosAllMessages = new FileOutputStream("output");

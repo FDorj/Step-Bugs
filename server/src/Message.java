@@ -1,9 +1,6 @@
 import java.io.Serializable;
-<<<<<<< HEAD
 import java.util.HashMap;
 
-=======
->>>>>>> 7fb1704810655601ddd99606fb01c44c5c5d4691
 /**
  * This class is used to create a message that contains
  * the name of the sender and the text of the message.
