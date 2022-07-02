@@ -1,3 +1,3 @@
-public enum React {
+public enum Reaction {
     Like,DisLike,LOL
 }

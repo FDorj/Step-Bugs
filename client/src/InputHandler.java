@@ -233,7 +233,13 @@ public class InputHandler {
                                         while (true) {
                                             printPvChatMenu();
                                             int pvMenu = Integer.parseInt(scanner.nextLine());
-                                            if (pvMenu == 1) {
+                                            if (pvMenu == 1){
+                                                ArrayList<Message> messages = client.privateChatHistory(friends.get(whichFriend-1));
+                                                for (Message message : messages){
+                                                    System.out.println(message);
+                                                }
+                                            }
+                                            else if (pvMenu == 2) {
                                                 PrivateChat privateChat = client.getPrivateChatFromServer(friends.get(whichFriend - 1));
                                                 System.out.println("f = " + friends.get(whichFriend - 1).getUserName());
                                                 System.out.println("---------------------------------");
@@ -420,9 +426,23 @@ public class InputHandler {
                                                     if (whichChannel == j) {
                                                         continue;
                                                     } else {
-                                                        printPvChatMenu();
+                                                        printTextChannelChatMenu();
+//                                                        System.out.println("1. Chat History");
+//                                                        System.out.println("2. pinned Messages");
+//                                                        System.out.println("3. Chat");
+//                                                        System.out.println("4. Setting");
+//                                                        System.out.println("5. back to main menu");
                                                         int chatMenuChoice = Integer.parseInt(scanner.nextLine());
-                                                        if (chatMenuChoice == 1) {
+                                                        if (chatMenuChoice == 1){   //chat history
+                                                            ArrayList<Message> messageArrayList = client.textChannelChatHistory(allServers.get(whichServer-1), textChannelArrayList.get(whichChannel-1));
+                                                            for (Message message : messageArrayList){
+                                                                System.out.println(message);
+                                                            }
+                                                        }
+                                                        else if (chatMenuChoice == 2){   //pinned messages
+
+                                                        }
+                                                        else if (chatMenuChoice == 3) {
                                                             System.out.println("------------------------------------");
                                                             boolean flag = client.sendMessage(allServers.get(whichServer - 1), textChannelArrayList.get(whichChannel - 1), client);
                                                             if (!flag) {
@@ -431,9 +451,9 @@ public class InputHandler {
                                                                 break;
                                                             }
 
-                                                        } else if (chatMenuChoice == 2) {
-
-                                                        } else if (chatMenuChoice == 3) {
+                                                        } else if (chatMenuChoice == 4) {
+                                                            //setting
+                                                        } else if (chatMenuChoice == 5) {
                                                             continue;
                                                         }
                                                     }
@@ -573,9 +593,18 @@ public class InputHandler {
     }
 
     public void printPvChatMenu () {
-        System.out.println("1. Chat");
-        System.out.println("2. Setting");
-        System.out.println("3. Back to main menu");
+        System.out.println("1. Chat History");
+        System.out.println("2. Chat");
+        System.out.println("3. Setting");
+        System.out.println("4. Back to main menu");
+    }
+
+    public void printTextChannelChatMenu () {
+        System.out.println("1. Chat History");
+        System.out.println("2. pinned Messages");
+        System.out.println("3. Chat");
+        System.out.println("4. Setting");
+        System.out.println("5. back to main menu");
     }
 
     public void printServerChatMenu () {

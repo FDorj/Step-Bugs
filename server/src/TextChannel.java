@@ -20,6 +20,10 @@ public class TextChannel extends Channel implements Serializable {
         allMessages.add(message);
     }
 
+    public ArrayList<Message> getAllMessages() {
+        return allMessages;
+    }
+
     public void saveAllMessage () {
         try {
             this.fosAllMessages = new FileOutputStream("output");

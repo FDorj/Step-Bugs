@@ -347,6 +347,28 @@ public class Client {
         }
     }
 
+    public ArrayList<Message> privateChatHistory(User friend){
+        ArrayList<Message> messageArrayList = null;
+        try {
+            objectOutputStream.writeObject("PrivateChatHistory " + friend.getUserName());
+            messageArrayList = (ArrayList<Message>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return messageArrayList;
+    }
+
+    public ArrayList<Message> textChannelChatHistory(DiscordServer discordServer, TextChannel textChannel){
+        ArrayList<Message> messageArrayList = null;
+        try {
+            objectOutputStream.writeObject("TextChannelChatHistory " + discordServer.getName() + " " + textChannel.getName());
+            messageArrayList = (ArrayList<Message>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return messageArrayList;
+    }
+
     public void setPhotoPath (String photoPath) {
         String string = null;
         InputStream inputStream = null;

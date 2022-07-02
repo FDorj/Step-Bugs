@@ -52,16 +52,12 @@ public class SendMessage implements Runnable {
             }
             t = client.readMessage(discordServer,textChannel);
         }
-        while (true){
+        while (true) {
             String msg = null;
             // read the message to deliver.
             Scanner scanner = InputHandler.scanner;
             msg = scanner.nextLine();
-            System.out.println("***" + client.getUser());
-            Message message = new Message(client.getUser() , msg);
-            System.out.println("**" + message.getSender().getUserName());
-
-
+            Message message = new Message(client.getUser(), msg);
             try {
                 // write on the output stream
                 objectOutputStream.writeUnshared(message);
@@ -73,7 +69,6 @@ public class SendMessage implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

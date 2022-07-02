@@ -293,10 +293,32 @@ public class ClientHandler implements Runnable {
                     String[] split = messageFromClient.split("\\s");
                     while (true) {
                         Message message = (Message) objectInputStream.readObject();
-                        for (DiscordServer discordServer : user.getDiscordServers()){
-                            if (discordServer.getName().equals(split[1])){
-                                for (Channel channel : discordServer.getChannels()){
-                                    if (channel.getName().equals(split[2])){
+                        if (message.getText().startsWith("React")) {
+                            String[] strings = message.getText().split("\\s");
+                            for (DiscordServer discordServer : user.getDiscordServers()) {
+                                if (discordServer.getName().equals(split[1])) {
+                                    for (Channel channel : discordServer.getChannels()) {
+                                        if (channel.getName().equals(split[2])) {
+                                            TextChannel textChannel = (TextChannel) channel;
+                                            for (Message message1 : textChannel.getAllMessages()){
+                                                if (message1.getSender().getUserName().equals(strings[1]) && message1.getText().equals(strings[2])){
+                                                    for (Reaction reaction : Reaction.values()){
+                                                        if (reaction.name().equalsIgnoreCase(strings[3])){
+                                                            message1.addReaction(reaction);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+
+                        for (DiscordServer discordServer : user.getDiscordServers()) {
+                            if (discordServer.getName().equals(split[1])) {
+                                for (Channel channel : discordServer.getChannels()) {
+                                    if (channel.getName().equals(split[2])) {
                                         TextChannel textChannel = (TextChannel) channel;
                                         textChannel.addToMessages(message);
                                     }
@@ -318,6 +340,7 @@ public class ClientHandler implements Runnable {
                                 break;
                             }
                         }
+                    }
                     }
                 }
                 else if (messageFromClient.startsWith("Regex")) {
@@ -382,7 +405,31 @@ public class ClientHandler implements Runnable {
                     Files.write(Path.of(path),b);
 
                 }
+                else if (messageFromClient.startsWith("PrivateChatHistory")){
+                    String[] split = messageFromClient.split("\\s");
+                    String friendUserName = split[1];
+                    for (User user : user.getUserPrivateChatHashMap().keySet()){
+                        if (user.getUserName().equals(friendUserName)){
+                            objectOutputStream.writeUnshared(user.getUserPrivateChatHashMap().get(user).getMessages());
+                        }
+                    }
                 }
+                else if (messageFromClient.startsWith("TextChannelChatHistory")){
+                    String[] strings = messageFromClient.split("\\s");
+                    String serverName = strings[1];
+                    String channelName = strings[2];
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(serverName)){
+                            for (Channel channel : discordServer.getChannels()){
+                                if (channel.getName().equals(channelName)){
+                                    TextChannel textChannel = (TextChannel) channel;
+                                    objectOutputStream.writeUnshared(textChannel.getAllMessages());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 //                broadCastMessage(messageFromClient);
             } catch (IOException | ClassNotFoundException ioException) {
             closeEveryThing(socket,objectInputStream,objectOutputStream);
