@@ -14,6 +14,10 @@ public class TextChannel extends Channel implements Serializable {
     private FileOutputStream fosAllMessages;
     private FileOutputStream fosPinedMessages;
 
+    /**
+     * This is a constructor for this class.
+     * @param name
+     */
     public TextChannel(String name) {
         super(name);
         this.allMessages = allMessages;
@@ -23,11 +27,17 @@ public class TextChannel extends Channel implements Serializable {
     public void addToMessages(Message message){
         allMessages.add(message);
     }
+<<<<<<< HEAD
 
     public ArrayList<Message> getAllMessages() {
         return allMessages;
     }
 
+=======
+    /**
+     * This method for read message.
+     */
+>>>>>>> 7fb1704810655601ddd99606fb01c44c5c5d4691
     public void saveAllMessage () {
         try {
             this.fosAllMessages = new FileOutputStream("output");
@@ -38,6 +48,9 @@ public class TextChannel extends Channel implements Serializable {
             ex.printStackTrace();
         }
     }
+    /**
+     * This method for read message.
+     */
     public void savePinedMessage () {
         try {
             this.fosPinedMessages = new FileOutputStream("output");

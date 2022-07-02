@@ -11,6 +11,11 @@ public class Message implements Serializable {
     private String text;
     private HashMap<Reaction, Integer> messageReacts;
 
+    /**
+     * This is a constructor for this class.
+     * @param sender
+     * @param text
+     */
     public Message(User sender, String text) {
         this.sender = sender;
         this.text = text;

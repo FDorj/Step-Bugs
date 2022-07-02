@@ -16,6 +16,9 @@ public class InputHandler {
     public InputHandler() {
     }
 
+    /**
+     * This method is for handle the program.
+     */
     public void handle () {
         while (true) {
             printFirstMenu();
@@ -546,6 +549,12 @@ public class InputHandler {
         }
     }
 
+    /**
+     * This method get hash of password.
+     * @param password
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
     public static String hashPassword (String password) throws NoSuchAlgorithmException {
        return Hasher.getHash(password);
     }

@@ -11,6 +11,9 @@ public class Server {
         this.serverSocket = serverSocket;
     }
 
+    /**
+     * This method is for accept client.
+     */
     public void startsServer () {
         try {
             while (!serverSocket.isClosed()) {
@@ -27,6 +30,9 @@ public class Server {
         }
     }
 
+    /**
+     * This method is for close server socket.
+     */
     public void closeServerSocket () {
         try {
             if (serverSocket != null) {

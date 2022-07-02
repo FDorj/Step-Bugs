@@ -16,6 +16,13 @@ public class SendMessage implements Runnable {
     private TextChannel textChannel;
     private String type;
 
+    /**
+     * This is a constructor for this class.
+     * @param privateChat
+     * @param objectOutputStream
+     * @param client
+     * @param friend
+     */
     public SendMessage(PrivateChat privateChat, ObjectOutputStream objectOutputStream, Client client, User friend) {
         this.privateChat = privateChat;
         this.objectOutputStream = objectOutputStream;
@@ -25,6 +32,13 @@ public class SendMessage implements Runnable {
 
     }
 
+    /**
+     * This is a constructor for this class.
+     * @param discordServer
+     * @param textChannel
+     * @param client
+     * @param objectOutputStream
+     */
     public SendMessage(DiscordServer discordServer , TextChannel textChannel , Client client , ObjectOutputStream objectOutputStream) {
         this.discordServer = discordServer;
         this.textChannel = textChannel;
@@ -33,6 +47,9 @@ public class SendMessage implements Runnable {
         this.type = "textChannelChat";
     }
 
+    /**
+     * This method for send message.
+     */
     @Override
     public void run() {
         Thread t = null;

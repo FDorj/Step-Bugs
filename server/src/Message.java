@@ -1,6 +1,9 @@
 import java.io.Serializable;
+<<<<<<< HEAD
 import java.util.HashMap;
 
+=======
+>>>>>>> 7fb1704810655601ddd99606fb01c44c5c5d4691
 /**
  * This class is used to create a message that contains
  * the name of the sender and the text of the message.
@@ -11,6 +14,11 @@ public class Message implements Serializable {
     private String text;
     private HashMap<Reaction, Integer> messageReacts;
 
+    /**
+     * This is a constructor for this class.
+     * @param sender
+     * @param text
+     */
     public Message(User sender, String text) {
         this.sender = sender;
         this.text = text;
