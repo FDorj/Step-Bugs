@@ -64,19 +64,29 @@ public class Client {
     public HashMap<User, Status> friendList () {
         HashMap<User, Status> friends = null;
         try {
-            System.out.println("dar client ghabl az write");
             objectOutputStream.writeUnshared("Show friends list");
-            System.out.println("dar client ghabl az read");
             friends = (HashMap<User, Status>) objectInputStream.readObject();
             System.out.println(friends.size());
-            System.out.println("dar client bad az read");
-            System.out.println("77777&&&&& " + user.getFriends().size());
             return friends;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return friends;
 
+    }
+
+    public HashMap<User, Status> serverUsers (DiscordServer discordServer){
+        HashMap<User, Status> users = null;
+        try {
+            objectOutputStream.writeObject("ShowServerUsers " + discordServer.getName());
+            users = (HashMap<User, Status>) objectInputStream.readObject();
+            return users;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     public HashSet<DiscordServer> discordServersList () {

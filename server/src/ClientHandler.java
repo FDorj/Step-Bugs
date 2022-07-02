@@ -106,6 +106,21 @@ public class ClientHandler implements Runnable {
                         closeEveryThing(socket,objectInputStream,objectOutputStream);
                     }
                 }
+                else if(messageFromClient.startsWith("ShowServerUsers")){
+                    String[] split = messageFromClient.split("\\s");
+                    String serverName = split[1];
+                    HashSet<User> serverUsers = null;
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(serverName)){
+                            serverUsers = discordServer.getAllServerUsers();
+                        }
+                    }
+                    HashMap<User, Status> userStatusHashMap = new HashMap<>();
+                    for (User user : serverUsers){
+                        userStatusHashMap.put(user, user.getStatus());
+                    }
+                    objectOutputStream.writeUnshared(userStatusHashMap);
+                }
                 else if (messageFromClient.equals("Show servers list")) {
                     try {
                         objectOutputStream.writeUnshared(user.getDiscordServers());

@@ -367,14 +367,21 @@ public class InputHandler {
                                         int whichServer = Integer.parseInt(scanner.nextLine());
                                         while (true) {
                                             printServerChatMenu();
-//                                            System.out.println("1. Show Text Channels");
-//                                            System.out.println("2. Show Voice Channels");
-//                                            System.out.println("3. Add Channel");
-//                                            System.out.println("4. Add A Friend to This Server");
-//                                            System.out.println("5. Setting");
-//                                            System.out.println("6. Back to main menu");
+//                                            System.out.println("1. Show All Users");
+//                                            System.out.println("2. Show Text Channels");
+//                                            System.out.println("3. Show Voice Channels");
+//                                            System.out.println("4. Add Channel");
+//                                            System.out.println("5. Add A Friend to This Server");
+//                                            System.out.println("6. Setting");
+//                                            System.out.println("7. Back to main menu");
                                             int serverChat = Integer.parseInt(scanner.nextLine());
-                                            if (serverChat == 1) {
+                                            if (serverChat == 1){
+                                                HashMap<User, Status> userStatusHashMap = client.serverUsers(allServers.get(whichServer-1));
+                                                for (User keyUser : userStatusHashMap.keySet()){
+                                                    System.out.println(keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
+                                                }
+                                            }
+                                            else if (serverChat == 2) {
                                                 ArrayList<TextChannel> textChannelArrayList = new ArrayList<>();
                                                 //text channel
                                                 if (client.textChannelList(allServers.get(whichServer-1)).size() == 0) {
@@ -412,13 +419,13 @@ public class InputHandler {
 
                                                 }
                                             }
-                                            else if (serverChat == 3){   // add channel
+                                            else if (serverChat == 4){   // add channel
                                                 System.out.println("Enter a name for your Channel");
                                                 String channelName = scanner.nextLine();
                                                 client.addChannel(channelName, allServers.get(whichServer-1).getName());
                                                 //System.out.println(client.textChannelList(allServers.get(whichServer-1)));
                                             }
-                                            else if (serverChat == 4){
+                                            else if (serverChat == 5){
                                                 int j = 1;
                                                 if (client.friendList().size() == 0) {
                                                     System.out.println("Wumpus is waiting on friends. You don't have to though!");
@@ -438,7 +445,7 @@ public class InputHandler {
                                                     client.addServer(allServers.get(whichServer-1), friends.get(whichFriend-1));
                                                 }
                                             }
-                                            else if (serverChat == 6){
+                                            else if (serverChat == 7){
                                                 break;
                                             }
                                         }
@@ -551,12 +558,13 @@ public class InputHandler {
     }
 
     public void printServerChatMenu () {
-        System.out.println("1. Show Text Channels");
-        System.out.println("2. Show Voice Channels");
-        System.out.println("3. Add Channel");
-        System.out.println("4. Add A Friend to This Server");
-        System.out.println("5. Setting");
-        System.out.println("6. Back to main menu");
+        System.out.println("1. Show All Users");
+        System.out.println("2. Show Text Channels");
+        System.out.println("3. Show Voice Channels");
+        System.out.println("4. Add Channel");
+        System.out.println("5. Add A Friend to This Server");
+        System.out.println("6. Setting");
+        System.out.println("7. Back to main menu");
     }
 
 

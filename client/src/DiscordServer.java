@@ -15,6 +15,7 @@ public class DiscordServer implements Serializable {
         this.admin = new HashSet<>();
         this.allServerUsers = new HashSet<>();
         this.channels = new HashSet<>();
+        this.allServerUsers.add(owner);
     }
 
     public String getName() {
@@ -35,5 +36,9 @@ public class DiscordServer implements Serializable {
 
     public void addChannel(Channel channel){
         this.channels.add(channel);
+    }
+
+    public HashSet<User> getAllServerUsers() {
+        return allServerUsers;
     }
 }
