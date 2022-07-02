@@ -71,7 +71,7 @@ public class InputHandler {
                         System.out.print("\nEnter a password : ");
                         password = scanner.nextLine();
                         //regex for userName
-                        String passwordPattern = "^(?=.\\d)(?=.[a-z])(?=.*[A-Z]).{8,}$/";
+                        String passwordPattern = "^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
 
 
                         System.out.print("\nEnter an email : ");
@@ -131,51 +131,51 @@ public class InputHandler {
                             photoPathRegex = client.patternMatches(photoPath, photoPathPattern);
 
                             //Regex
-                            if (!userNameRegex) {
-                                try {
-                                    throw new ExceptionHandler();
-                                } catch (ExceptionHandler e) {
-                                    System.out.println("Username is not valid!");
-                                    x++;
-                                }
-                            }
-                            if (!passwordRegex) {
-                                try {
-                                    throw new ExceptionHandler();
-                                } catch (ExceptionHandler e) {
-                                    System.out.println("Password is not valid!");
-                                    x++;
-                                }
-                            }
-                            if (!emailRegex) {
-                                try {
-                                    throw new ExceptionHandler();
-                                } catch (ExceptionHandler e) {
-                                    System.out.println("email is not valid!");
-                                    x++;
-                                }
-                            }
-                            if (!phoneNumberRegex) {
-                                try {
-                                    throw new ExceptionHandler();
-                                } catch (ExceptionHandler e) {
-                                    System.out.println("Phone number is not valid!");
-                                    x++;
-                                }
-                            }
-                            if (!photoPathRegex) {
-                                try {
-                                    throw new ExceptionHandler();
-                                } catch (ExceptionHandler e) {
-                                    System.out.println("The path of photo is not valid!");
-                                    x++;
-                                }
-                            }
-
-                            if (x != 0) {
-                                System.out.println("Try again!");
-                                continue;
-                            }
+//                            if (!userNameRegex) {
+//                                try {
+//                                    throw new ExceptionHandler();
+//                                } catch (ExceptionHandler e) {
+//                                    System.out.println("Username is not valid!");
+//                                    x++;
+//                                }
+//                            }
+//                            if (!passwordRegex) {
+//                                try {
+//                                    throw new ExceptionHandler();
+//                                } catch (ExceptionHandler e) {
+//                                    System.out.println("Password is not valid!");
+//                                    x++;
+//                                }
+//                            }
+//                            if (!emailRegex) {
+//                                try {
+//                                    throw new ExceptionHandler();
+//                                } catch (ExceptionHandler e) {
+//                                    System.out.println("email is not valid!");
+//                                    x++;
+//                                }
+//                            }
+//                            if (!phoneNumberRegex) {
+//                                try {
+//                                    throw new ExceptionHandler();
+//                                } catch (ExceptionHandler e) {
+//                                    System.out.println("Phone number is not valid!");
+//                                    x++;
+//                                }
+//                            }
+//                            if (!photoPathRegex) {
+//                                try {
+//                                    throw new ExceptionHandler();
+//                                } catch (ExceptionHandler e) {
+//                                    System.out.println("The path of photo is not valid!");
+//                                    x++;
+//                                }
+//                            }
+//
+//                            if (x != 0) {
+//                                System.out.println("Try again!");
+//                                continue;
+//                            }
 
                             User user = new User(userName, hashed, email, phoneNumber);
                             client.signUp();
@@ -347,7 +347,7 @@ public class InputHandler {
                             } else if (choice == 2) {
                                 printServerMenu();
 //                        System.out.println("1.All servers");
-//                        System.out.println("2.Add server");
+//                        System.out.println("2.Create server");
 //                        System.out.println("3.Back to main menu");
 
                                 ArrayList<DiscordServer> allServers = new ArrayList<>();
@@ -363,26 +363,26 @@ public class InputHandler {
                                             i++;
                                         }
 
-//                                System.out.println("1. Show Text Channels");
-//                                System.out.println("2. Show Voice Channels");
-//                                System.out.println("3. Add Channel");
-//                                System.out.println("4. Setting");
-//                                System.out.println("5. Back to main menu");
-
                                         System.out.println("Enter a number: ");
                                         int whichServer = Integer.parseInt(scanner.nextLine());
                                         while (true) {
                                             printServerChatMenu();
+//                                            System.out.println("1. Show Text Channels");
+//                                            System.out.println("2. Show Voice Channels");
+//                                            System.out.println("3. Add Channel");
+//                                            System.out.println("4. Add A Friend to This Server");
+//                                            System.out.println("5. Setting");
+//                                            System.out.println("6. Back to main menu");
                                             int serverChat = Integer.parseInt(scanner.nextLine());
                                             if (serverChat == 1) {
                                                 ArrayList<TextChannel> textChannelArrayList = new ArrayList<>();
                                                 //text channel
-                                                if (client.textChannelList(allServers.get(whichServer)).size() == 0) {
+                                                if (client.textChannelList(allServers.get(whichServer-1)).size() == 0) {
                                                     System.out.println("There is not any Channel in this server");
                                                     break;
                                                 } else {
                                                     int j = 1;
-                                                    for (TextChannel textChannel : client.textChannelList(allServers.get(whichServer))) {
+                                                    for (TextChannel textChannel : client.textChannelList(allServers.get(whichServer - 1))) {
                                                         textChannelArrayList.add(textChannel);
                                                         System.out.println(j + ". " + textChannel.getName());
                                                         j++;
@@ -412,12 +412,41 @@ public class InputHandler {
 
                                                 }
                                             }
+                                            else if (serverChat == 3){   // add channel
+                                                System.out.println("Enter a name for your Channel");
+                                                String channelName = scanner.nextLine();
+                                                client.addChannel(channelName, allServers.get(whichServer-1).getName());
+                                                //System.out.println(client.textChannelList(allServers.get(whichServer-1)));
+                                            }
+                                            else if (serverChat == 4){
+                                                int j = 1;
+                                                if (client.friendList().size() == 0) {
+                                                    System.out.println("Wumpus is waiting on friends. You don't have to though!");
+                                                } else {
+                                                    HashMap<User, Status> userStatusHashMap = client.friendList();
+                                                    ArrayList<User> friends = new ArrayList<>();
+                                                    for (User keyUser : userStatusHashMap.keySet()) {
+                                                        friends.add(keyUser);
+                                                        System.out.println(j + ". " + keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
+                                                        j++;
+                                                    }
+                                                    System.out.println("Enter a number: ");
+                                                    int whichFriend = Integer.parseInt(scanner.nextLine());
+                                                    //add this friend to server users
+                                                    client.addUserToServerUsers(friends.get(whichFriend-1), allServers.get(whichServer-1));
+                                                    //add this server to friend serverlists
+                                                    client.addServer(allServers.get(whichServer-1), friends.get(whichFriend-1));
+                                                }
+                                            }
+                                            else if (serverChat == 6){
+                                                break;
+                                            }
                                         }
                                     }
                                 } else if (select == 2) {
-                                    System.out.println("Enter a name for your sever:");
+                                    System.out.println("Enter a name for your server:");
                                     String serverName = scanner.nextLine();
-                                    client.addServer(serverName);
+                                    client.createServer(serverName);
                                 } else if (select == 3) {
                                     continue;
                                 }
@@ -496,7 +525,7 @@ public class InputHandler {
 
     public void printServerMenu () {
         System.out.println("1.All servers");
-        System.out.println("2.Add server");
+        System.out.println("2.Create server");
         System.out.println("3.Back to main menu");
     }
 
@@ -525,8 +554,9 @@ public class InputHandler {
         System.out.println("1. Show Text Channels");
         System.out.println("2. Show Voice Channels");
         System.out.println("3. Add Channel");
-        System.out.println("4. Setting");
-        System.out.println("5. Back to main menu");
+        System.out.println("4. Add A Friend to This Server");
+        System.out.println("5. Setting");
+        System.out.println("6. Back to main menu");
     }
 
 

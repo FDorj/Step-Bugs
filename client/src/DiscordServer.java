@@ -32,4 +32,8 @@ public class DiscordServer implements Serializable {
     public HashSet<Channel> getChannels() {
         return channels;
     }
+
+    public void addChannel(Channel channel){
+        this.channels.add(channel);
+    }
 }

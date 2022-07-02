@@ -130,14 +130,10 @@ public class ClientHandler implements Runnable {
                     }
                 }
                 else if (messageFromClient.startsWith("checkIsFriend")) {
-                    System.out.println("!!! in !!!");
                     String friendUserName = messageFromClient.substring(14);
                     int x = 0;
-                    System.out.println("ghable for &&&&&&");
                     for (User user1 : user.getFriends()) {
-                        System.out.println("beine for va if ********");
                         if (user1.getUserName().equals(friendUserName)) {
-                            System.out.println("%%% b");
                             objectOutputStream.writeObject(true);
                             x = 1;
                         }
@@ -166,8 +162,8 @@ public class ClientHandler implements Runnable {
                 else if(messageFromClient.equals("Show incoming requests list")){
                     objectOutputStream.writeUnshared(user.getInComingPending());
                 }
-                else if(messageFromClient.startsWith("AddServer")){
-                    String serverName = messageFromClient.substring(10);
+                else if(messageFromClient.startsWith("CreateServer")){
+                    String serverName = messageFromClient.substring(13);
                     DiscordServer newServer = new DiscordServer(serverName, user);
                     HashSet<DiscordServer> servers = user.getDiscordServers();
                     servers.add(newServer);
@@ -220,19 +216,10 @@ public class ClientHandler implements Runnable {
                 }
                 else if (messageFromClient.startsWith("PrivateChat ")) {
                     String friend = messageFromClient.substring(12);
-//                    System.out.println("123456789");
 
                     for (User user : user.getUserPrivateChatHashMap().keySet()){
-//                        System.out.println("999999 " + user.getUserPrivateChatHashMap());
-//                        System.out.println("1*** " + user.getUserName());
                         if (user.getUserName().equals(friend)){
-//                            System.out.println("888888 " + user.getUserPrivateChatHashMap());
-//                            System.out.println("777777 " + this.user.getUserPrivateChatHashMap());
-                            System.out.println("2*** " + user.getUserName());
-//                            System.out.println("666666 " + this.user.getUserPrivateChatHashMap().get(user));
                             objectOutputStream.writeUnshared(this.user.getUserPrivateChatHashMap().get(user));
-//                            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + user.getUserPrivateChatHashMap().get(user));
-                            System.out.println("3*** " + user.getUserName());
                         }
                     }
                 }
@@ -246,7 +233,7 @@ public class ClientHandler implements Runnable {
                         }
                         for (ClientHandler clientHandler : clientHandlers){
                             if (clientHandler.getUser().getUserName().equals(receiver)){
-//                                Message message1 = new Message(user, message.getReceiver(), message.getText());
+
                                 clientHandler.objectOutputStream.writeObject(message);
                                 System.out.println("Message sent");
                                 break;
@@ -254,25 +241,27 @@ public class ClientHandler implements Runnable {
                         }
                     }
                 }
-                else if (messageFromClient.startsWith("serverMessage")) {
-                    String[] arrString = messageFromClient.split(":");
-                    String userName = arrString[1];
-                    String messageToSend = arrString[2];
-                    for (ClientHandler clientHandler1 : clientHandlers) {
-                        if (!clientHandler1.user.getUserName().equals(userName)) {
-                            try {
-                                clientHandler1.objectOutputStream.writeObject(messageToSend);
-                            } catch (IOException e) {
-                                closeEveryThing (socket,objectInputStream,objectOutputStream);
-                            }
-                        }
-                    }
-                }
+//                else if (messageFromClient.startsWith("serverMessage")) {
+//                    String[] arrString = messageFromClient.split(":");
+//                    String userName = arrString[1];
+//                    String messageToSend = arrString[2];
+//                    for (ClientHandler clientHandler1 : clientHandlers) {
+//                        if (!clientHandler1.user.getUserName().equals(userName)) {
+//                            try {
+//                                clientHandler1.objectOutputStream.writeObject(messageToSend);
+//                            } catch (IOException e) {
+//                                closeEveryThing (socket,objectInputStream,objectOutputStream);
+//                            }
+//                        }
+//                    }
+//                }
                 else if (messageFromClient.startsWith("TextChannelList")){
                     String serverName = messageFromClient.substring(16);
+                    System.out.println(serverName + " **************");
                     for (DiscordServer discordServer : user.getDiscordServers()){
                         if (discordServer.getName().equals(serverName)){
-                            objectOutputStream.writeObject(discordServer.getChannels());
+                            System.out.println("*********" + discordServer.getChannels());
+                            objectOutputStream.writeUnshared(discordServer.getChannels());
                         }
                     }
                 }
@@ -306,6 +295,49 @@ public class ClientHandler implements Runnable {
                     String regexPattern = split[2];
                     boolean isMatch = Pattern.compile(regexPattern).matcher(input).matches();
                     objectOutputStream.writeObject(isMatch);
+                }
+                else if(messageFromClient.startsWith("AddChannel")){
+                    String[] split = messageFromClient.split("\\s");
+                    String channelName = split[1];
+                    String serverName = split[2];
+                    Channel newChannel = new TextChannel(channelName);
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(serverName)){
+                            discordServer.addChannel(newChannel);
+                            System.out.println(discordServer.getChannels());
+                            System.out.println("*****************");
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("AddUserToServerUsers")){
+                    String[] split = messageFromClient.split("\\s");
+                    String userName = split[1];
+                    String serverName = split[2];
+                    for (User user1 : user.getFriends()){
+                        if (user1.getUserName().equals(userName)){
+                            for (DiscordServer discordServer : user.getDiscordServers()){
+                                if (discordServer.getName().equals(serverName)){
+                                    discordServer.addMember(user1);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("AddServer")){
+                    String[] strings = messageFromClient.split("\\s");
+                    String serverName = strings[1];
+                    String friendName = strings[2];
+                    for (User user1 : user.getFriends()){
+                        if (user1.getUserName().equals(friendName)){
+                            for (DiscordServer discordServer : user.getDiscordServers()){
+                                if (discordServer.getName().equals(serverName)){
+                                    HashSet<DiscordServer> discordServers = user1.getDiscordServers();
+                                    discordServers.add(discordServer);
+                                    user1.setDiscordServers(discordServers);
+                                }
+                            }
+                        }
+                    }
                 }
                 }
 //                broadCastMessage(messageFromClient);

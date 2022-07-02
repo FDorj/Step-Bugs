@@ -185,10 +185,18 @@ public class Client {
         }
     }
 
-    public void addServer(String serverName){
+    public void createServer(String serverName){
         try {
-            objectOutputStream.writeObject("AddServer " + serverName);
+            objectOutputStream.writeObject("CreateServer " + serverName);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addServer(DiscordServer server, User friend){
+        try {
+            objectOutputStream.writeObject("AddServer " + server.getName() + " " + friend.getUserName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -254,6 +262,7 @@ public class Client {
         try {
             objectOutputStream.writeObject("TextChannelList " + discordServer.getName());
             channels = (HashSet<Channel>) objectInputStream.readObject();
+            System.out.println("******* " + channels + " ********");
 //            return textChannels;
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,16 +275,17 @@ public class Client {
                 textChannels.add((TextChannel) channel);
             }
         }
+        System.out.println("******* " + textChannels + " ********");
         return textChannels;
     }
 
-    public void textChannelChat(DiscordServer discordServer, TextChannel textChannel){
-        try {
-            objectOutputStream.writeObject("TextChannelChat " + discordServer.getName() + " " + textChannel.getName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void textChannelChat(DiscordServer discordServer, TextChannel textChannel){
+//        try {
+//            objectOutputStream.writeObject("TextChannelChat " + discordServer.getName() + " " + textChannel.getName());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public boolean patternMatches (String input, String regexPattern) {
         boolean isMatch = false;
@@ -287,6 +297,22 @@ public class Client {
             e.printStackTrace();
         }
         return isMatch;
+    }
+
+    public void addChannel(String channelName, String serverName){
+        try {
+            objectOutputStream.writeObject("AddChannel " + channelName + " " + serverName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addUserToServerUsers(User user, DiscordServer discordServer){
+        try {
+            objectOutputStream.writeObject("AddUserToServerUsers " + user.getUserName() + " " + discordServer.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
