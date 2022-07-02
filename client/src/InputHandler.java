@@ -380,6 +380,9 @@ public class InputHandler {
                                                 for (User keyUser : userStatusHashMap.keySet()){
                                                     System.out.println(keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
                                                 }
+                                                System.out.println("Press Enter");
+                                                String enter = scanner.nextLine();
+                                                continue;
                                             }
                                             else if (serverChat == 2) {
                                                 ArrayList<TextChannel> textChannelArrayList = new ArrayList<>();
