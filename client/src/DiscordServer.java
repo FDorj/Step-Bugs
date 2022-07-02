@@ -21,6 +21,11 @@ public class DiscordServer implements Serializable {
     private FileOutputStream fosAllServerUsers;
     private FileOutputStream fosChannels;
 
+    /**
+     * This is a constructor for this class.
+     * @param name
+     * @param owner
+     */
     public DiscordServer(String name , User owner) {
         this.name = name;
         this.owner = owner;
@@ -54,6 +59,9 @@ public class DiscordServer implements Serializable {
         return allServerUsers;
     }
 
+    /**
+     * This method is for save to file.
+     */
     public void saveAdmin () {
         try {
             this.fosAdmin = new FileOutputStream("output");
@@ -64,7 +72,9 @@ public class DiscordServer implements Serializable {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * This method is for save to file.
+     */
     public void saveAllServerUsers () {
         try {
             this.fosAllServerUsers = new FileOutputStream("output");
@@ -75,7 +85,9 @@ public class DiscordServer implements Serializable {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * This method is for save to file.
+     */
     public void saveUChannels () {
         try {
             this.fosChannels = new FileOutputStream("output");

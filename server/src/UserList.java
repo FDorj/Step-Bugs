@@ -28,6 +28,11 @@ public final class UserList {
         this.users.add(user);
     }
 
+    /**
+     * This method find user by username.
+     * @param userName
+     * @return
+     */
     public User findUserByUsername(String userName){
         User userFound = null;
         for (User user : users){
@@ -38,6 +43,11 @@ public final class UserList {
         return userFound;
     }
 
+    /**
+     * This method check exists user.
+     * @param userName
+     * @return
+     */
     public boolean checkUser (String userName) {
         for (User user : userList.getUsers()) {
             if (user.getUserName().equals(userName)) {
@@ -47,6 +57,11 @@ public final class UserList {
         return false;
     }
 
+    /**
+     * This method check validation of password.
+     * @param password
+     * @return
+     */
     public boolean checkPassword (String password) {
         try {
             String hashPassword = Hasher.getHash(password);
@@ -61,6 +76,9 @@ public final class UserList {
         return false;
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveUsers () {
         try {
             this.fosUsers = new FileOutputStream("output");

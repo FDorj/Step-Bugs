@@ -3,7 +3,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
-
+/**
+ * This class is created to build the server.
+ * In it there is the name of the server and the owner
+ * and a list of admins and all the users of the server
+ * and the channels of this server.
+ * @version 1.1
+ */
 public class DiscordServer implements Serializable {
     private String name;
     private User owner;
@@ -15,6 +21,11 @@ public class DiscordServer implements Serializable {
     private FileOutputStream fosAllServerUsers;
     private FileOutputStream fosChannels;
 
+    /**
+     * This is a constructor for this class.
+     * @param name
+     * @param owner
+     */
     public DiscordServer(String name , User owner) {
         this.name = name;
         this.owner = owner;
@@ -48,6 +59,9 @@ public class DiscordServer implements Serializable {
         return allServerUsers;
     }
 
+    /**
+     * This method is for save to file.
+     */
     public void saveAdmin () {
         try {
             this.fosAdmin = new FileOutputStream("output");
@@ -58,7 +72,9 @@ public class DiscordServer implements Serializable {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * This method is for save to file.
+     */
     public void saveAllServerUsers () {
         try {
             this.fosAllServerUsers = new FileOutputStream("output");
@@ -69,7 +85,9 @@ public class DiscordServer implements Serializable {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * This method is for save to file.
+     */
     public void saveUChannels () {
         try {
             this.fosChannels = new FileOutputStream("output");

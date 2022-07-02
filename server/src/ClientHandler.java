@@ -20,6 +20,10 @@ public class ClientHandler implements Runnable {
     private User user;
     private UserList userList = UserList.getInstance();
 
+    /**
+     * This is a constructor for this class.
+     * @param socket
+     */
     public ClientHandler (Socket socket) {
         try {
             this.socket = socket;
@@ -30,6 +34,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * This method add user to clientHandler.
+     */
     public void addUserToClientHandler () {
         try {
             System.out.println("b() " + this.user);
@@ -45,6 +52,9 @@ public class ClientHandler implements Runnable {
         System.out.println("SERVER : " + user.getUserName() + "has entered the chat!");
     }
 
+    /**
+     * This method is for receive from client.
+     */
     @Override
     public void run() {
 
@@ -403,6 +413,9 @@ public class ClientHandler implements Runnable {
 //        }
 //    }
 
+    /**
+     * This method is for remove clientHandler.
+     */
     public void removeClientHandler () {
 
         System.out.println("offline before" + user.getStatus() + "^^^" + user.getUserName());
@@ -416,6 +429,13 @@ public class ClientHandler implements Runnable {
         System.out.println("SERVER : " + user.getUserName() + " has left the chat!");
     }
 //
+
+    /**
+     * This method is for close socket and objectInputStream and objectOutputStream.
+     * @param socket
+     * @param objectInputStream
+     * @param objectOutputStream
+     */
     public void closeEveryThing (Socket socket , ObjectInputStream objectInputStream , ObjectOutputStream objectOutputStream) {
         removeClientHandler();
 
@@ -427,9 +447,9 @@ public class ClientHandler implements Runnable {
             }
         }
 
-        if (objectInputStream != null) {
+        if (objectOutputStream != null) {
             try {
-                objectInputStream.close();
+                objectOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

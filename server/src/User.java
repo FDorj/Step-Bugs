@@ -4,7 +4,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-
+/**
+ * This class is for storing user information.
+ * @version 2.1
+ */
 public class User implements Serializable {
     private String userName;
     //  private String password;
@@ -29,6 +32,13 @@ public class User implements Serializable {
     private FileOutputStream fosInComingPending;
     private FileOutputStream fosUserPrivateChatHashMap;
 
+    /**
+     * This is a constructor for this class.
+     * @param userName
+     * @param hashedPassword
+     * @param email
+     * @param phoneNumber
+     */
     public User(String userName, String hashedPassword, String email, String phoneNumber) {
         this.userName = userName;
         this.hashedPassword = hashedPassword;
@@ -46,6 +56,9 @@ public class User implements Serializable {
 
     }
 
+    /**
+     * This method print friends.
+     */
     public void printFriends() {
         for (User user : friends) {
             System.out.println(user + "\n");
@@ -124,6 +137,9 @@ public class User implements Serializable {
         return userPrivateChatHashMap;
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveFriends () {
         try {
             this.fosFriends = new FileOutputStream("output");
@@ -135,6 +151,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveBlocked () {
         try {
             this.fosBlocked = new FileOutputStream("output");
@@ -146,6 +165,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveChats () {
         try {
             this.fosChats = new FileOutputStream("output");
@@ -157,6 +179,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveDiscordServers () {
         try {
             this.fosDiscordServers = new FileOutputStream("output");
@@ -168,6 +193,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveOutGoingPending () {
         try {
             this.fosOutGoingPending = new FileOutputStream("output");
@@ -179,6 +207,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveInComingPending () {
         try {
             this.fosInComingPending = new FileOutputStream("output");
@@ -190,6 +221,9 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveUserPrivateChatHashMap () {
         try {
             this.fosUserPrivateChatHashMap = new FileOutputStream("output");

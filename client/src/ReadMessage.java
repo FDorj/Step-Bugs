@@ -11,17 +11,31 @@ public class ReadMessage extends Thread {
     private DiscordServer discordServer;
     private TextChannel textChannel;
 
+    /**
+     * This is a constructor for this class.
+     * @param objectInputStream
+     * @param privateChat
+     */
     public ReadMessage(ObjectInputStream objectInputStream , PrivateChat privateChat) {
         this.objectInputStream = objectInputStream;
         this.privateChat = privateChat;
     }
 
+    /**
+     * This is a constructor for this class.
+     * @param objectInputStream
+     * @param discordServer
+     * @param textChannel
+     */
     public ReadMessage (ObjectInputStream objectInputStream , DiscordServer discordServer , TextChannel textChannel) {
         this.objectInputStream = objectInputStream;
         this.discordServer = discordServer;
         this.textChannel = textChannel;
     }
 
+    /**
+     * This method for read message.
+     */
     @Override
     public void run() {
         thread = this;

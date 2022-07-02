@@ -16,6 +16,9 @@ public class Friend {
         return friends;
     }
 
+    /**
+     * This method for read message.
+     */
     public void saveUsers () {
         try {
             this.fosFriends = new FileOutputStream("output");

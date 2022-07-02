@@ -38,7 +38,7 @@ public class Client {
     }
 
     /**
-     * This class is for signIn in chat.
+     * This method is for signIn in chat.
      * @param userName
      * @param password
      * @return
@@ -56,7 +56,7 @@ public class Client {
     }
 
     /**
-     * This class is for signUp in chat.
+     * This method is for signUp in chat.
      */
     public void signUp(){
         try {
@@ -67,7 +67,7 @@ public class Client {
     }
 
     /**
-     * This class add user to server.
+     * This method add user to server.
      */
     public void addUserToServer () {
         try {
@@ -80,7 +80,7 @@ public class Client {
     }
 
     /**
-     * This class gets a list of friends from server.
+     * This method gets a list of friends from server.
      * @return
      */
     public HashMap<User, Status> friendList () {
@@ -97,6 +97,11 @@ public class Client {
 
     }
 
+    /**
+     * This method gets a list of serverUsers.
+     * @param discordServer
+     * @return
+     */
     public HashMap<User, Status> serverUsers (DiscordServer discordServer){
         HashMap<User, Status> users = null;
         try {
@@ -111,6 +116,10 @@ public class Client {
         return users;
     }
 
+    /**
+     * This method gets a list of servers.
+     * @return
+     */
     public HashSet<DiscordServer> discordServersList () {
         HashSet<DiscordServer> discordServers = null;
         try {
@@ -123,6 +132,10 @@ public class Client {
         return discordServers;
     }
 
+    /**
+     * This method gets a list of blocked users.
+     * @return
+     */
     public HashSet<User> blockedUserList () {
         HashSet<User> blockedUser = null;
         try {
@@ -134,6 +147,11 @@ public class Client {
         return blockedUser;
     }
 
+    /**
+     * This method checks validation of username.
+     * @param userName
+     * @return
+     */
     public boolean checkUserName(String userName){
         boolean hasUserName = false;
         try{
@@ -146,6 +164,11 @@ public class Client {
         return hasUserName;
     }
 
+    /**
+     * This method checks isFriend.
+     * @param userName
+     * @return
+     */
     public boolean checkIsFriend(String userName){
         boolean isFriend = false;
         try{
@@ -161,6 +184,10 @@ public class Client {
         return isFriend;
     }
 
+    /**
+     * This method send friend request.
+     * @param userName
+     */
     public void friendRequest(String userName){
         try {
             objectOutputStream.writeObject("request " + userName);
@@ -169,6 +196,10 @@ public class Client {
         }
     }
 
+    /**
+     * This method gets a list of outgoing request from server.
+     * @return
+     */
     public HashSet<User> outGoingInvite () {
         HashSet<User> outGoingRequest = null;
         try {
@@ -180,11 +211,19 @@ public class Client {
         return outGoingRequest;
     }
 
+    /**
+     * This method convert hashSet to arrayList.
+     * @return
+     */
     public ArrayList<User> outGoingInviteList () {
         ArrayList<User> outGoingRequestList = new ArrayList<>(outGoingInvite());
         return outGoingRequestList;
     }
 
+    /**
+     * This method gets a list of incoming request from server.
+     * @return
+     */
     public HashSet<User> incomingInvite () {
         HashSet<User> incomingRequest = null;
         try {
@@ -196,27 +235,45 @@ public class Client {
         return incomingRequest;
     }
 
+    /**
+     * This method convert hashSet to arrayList.
+     * @return
+     */
     public ArrayList<User> incomingInviteList () {
         ArrayList<User> incomingRequestList = new ArrayList<>(incomingInvite());
         return incomingRequestList;
     }
 
+    /**
+     * This method is for accept or reject incoming friend request.
+     * @param num 1--->cancel
+     * @param user1
+     */
     public void acceptOrRejectIncoming(int num, User user1){
         try {
-            objectOutputStream.writeObject("acceptOrRejectIncoming " + user1.getUserName() + " " +num);
+            objectOutputStream.writeObject("acceptOrRejectIncoming " + user1.getUserName() + " " + num);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * This method is for accept or reject outgoing friend request.
+     * @param num 1--->accept  2--->reject
+     * @param user1
+     */
     public void acceptOrRejectOutGoing(int num, User user1){
         try {
-            objectOutputStream.writeObject("acceptOrRejectOutGoing " + user1.getUserName() + " " +num);
+            objectOutputStream.writeObject("acceptOrRejectOutGoing " + user1.getUserName() + " " + num);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * This method is for create a new server.
+     * @param serverName
+     */
     public void createServer(String serverName){
         try {
             objectOutputStream.writeObject("CreateServer " + serverName);
@@ -226,6 +283,11 @@ public class Client {
         }
     }
 
+    /**
+     * This method is for add server.
+     * @param server
+     * @param friend
+     */
     public void addServer(DiscordServer server, User friend){
         try {
             objectOutputStream.writeObject("AddServer " + server.getName() + " " + friend.getUserName());
@@ -234,6 +296,10 @@ public class Client {
         }
     }
 
+    /**
+     * This method set a status for user.
+     * @param status
+     */
     public void setUserStatus(String status){
         try {
             objectOutputStream.writeObject("SetStatus " + status);
@@ -242,6 +308,11 @@ public class Client {
         }
     }
 
+    /**
+     * This method gets privateChat from server.
+     * @param friend
+     * @return
+     */
     public PrivateChat getPrivateChatFromServer (User friend) {
         PrivateChat privateChat = null;
         try{
@@ -254,30 +325,58 @@ public class Client {
         return privateChat;
     }
 
+    /**
+     * This method is for send message(privateChat).
+     * @param client
+     * @param privateChat
+     * @param friend
+     * @return
+     */
     public boolean sendMessage(Client client, PrivateChat privateChat, User friend){
        SendMessage sendMessage = new SendMessage(privateChat, objectOutputStream, client, friend);
        sendMessage.run();
        return sendMessage.isFlag();
     }
 
+    /**
+     * This method is for send message(textChannel).
+     * @param discordServer
+     * @param textChannel
+     * @param client
+     * @return
+     */
     public boolean sendMessage (DiscordServer discordServer , TextChannel textChannel , Client client) {
         SendMessage sendMessage = new SendMessage(discordServer,textChannel,client,objectOutputStream);
         sendMessage.run();
         return sendMessage.isFlag();
     }
 
+    /**
+     * This method is for read message(privateChat).
+     * @param privateChat
+     * @return
+     */
     public Thread readMessage(PrivateChat privateChat){
         Thread t = new ReadMessage(objectInputStream,privateChat);
         t.start();
         return t;
     }
 
+    /**
+     * This method is for read message(textChannel).
+     * @param discordServer
+     * @param textChannel
+     * @return
+     */
     public Thread readMessage (DiscordServer discordServer , TextChannel textChannel) {
         Thread t = new ReadMessage(objectInputStream,discordServer,textChannel);
         t.start();
         return t;
     }
 
+    /**
+     * This method is for send message in server.
+     */
     public void sendMessageInServer () {
         while (socket.isConnected()) {
             String messageToSend = InputHandler.scanner.nextLine();
@@ -289,6 +388,11 @@ public class Client {
         }
     }
 
+    /**
+     * This method gets a list of text channels from server.
+     * @param discordServer
+     * @return
+     */
     public HashSet<TextChannel> textChannelList(DiscordServer discordServer){
         HashSet<Channel> channels = null;
         try {
@@ -319,6 +423,12 @@ public class Client {
 //        }
 //    }
 
+    /**
+     * This method checks regex.
+     * @param input
+     * @param regexPattern
+     * @return
+     */
     public boolean patternMatches (String input, String regexPattern) {
         boolean isMatch = false;
         try {
@@ -331,6 +441,11 @@ public class Client {
         return isMatch;
     }
 
+    /**
+     * This method add channel.
+     * @param channelName
+     * @param serverName
+     */
     public void addChannel(String channelName, String serverName){
         try {
             objectOutputStream.writeObject("AddChannel " + channelName + " " + serverName);
@@ -339,6 +454,11 @@ public class Client {
         }
     }
 
+    /**
+     * This method add user to serverUsers.
+     * @param user
+     * @param discordServer
+     */
     public void addUserToServerUsers(User user, DiscordServer discordServer){
         try {
             objectOutputStream.writeObject("AddUserToServerUsers " + user.getUserName() + " " + discordServer.getName());
@@ -347,6 +467,10 @@ public class Client {
         }
     }
 
+    /**
+     * This method set the path of photo.
+     * @param photoPath
+     */
     public void setPhotoPath (String photoPath) {
         String string = null;
         InputStream inputStream = null;
