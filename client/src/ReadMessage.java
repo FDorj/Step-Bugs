@@ -1,6 +1,9 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
+/**
+ * This class is used to read the message.
+ * @version 1.3
+ */
 public class ReadMessage extends Thread {
     public static Thread thread;
     private ObjectInputStream objectInputStream;

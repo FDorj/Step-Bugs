@@ -1,6 +1,10 @@
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+/**
+ * This class is for converting the password into its hash.
+ * @version 1.0
+ */
 public class Hasher {
     public static String getHash(String input) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");

@@ -1,18 +1,24 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Pattern;
-
+/**
+ * This class is used to communicate with the server.
+ * @version 1.4
+ */
 public class Client {
     private Socket socket;
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private User user;
 
+    /**
+     * This is a constructor for this class.
+     * @param socket
+     */
     public Client (Socket socket) {
         try {
             this.socket = socket;
@@ -31,6 +37,12 @@ public class Client {
         this.user = user;
     }
 
+    /**
+     * This class is for signIn in chat.
+     * @param userName
+     * @param password
+     * @return
+     */
     public String signIn(String userName, String password){
         String serverMessage = null;
         try {
@@ -43,6 +55,9 @@ public class Client {
         return serverMessage;
     }
 
+    /**
+     * This class is for signUp in chat.
+     */
     public void signUp(){
         try {
             objectOutputStream.writeObject("SignUp");
@@ -51,6 +66,9 @@ public class Client {
         }
     }
 
+    /**
+     * This class add user to server.
+     */
     public void addUserToServer () {
         try {
             System.out.println("@ before add user");
@@ -61,6 +79,10 @@ public class Client {
         }
     }
 
+    /**
+     * This class gets a list of friends from server.
+     * @return
+     */
     public HashMap<User, Status> friendList () {
         HashMap<User, Status> friends = null;
         try {
@@ -323,6 +345,26 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setPhotoPath (String photoPath) {
+        String string = null;
+        InputStream inputStream = null;
+        try {
+
+            objectOutputStream.writeObject("photo " + this.user.getUserName());
+            string = (String) objectInputStream.readObject();
+
+            File file = new File(photoPath);
+            byte b[] = Files.readAllBytes(file.toPath());
+
+            if (string.equals("yes")) {
+                objectOutputStream.writeObject(b);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

@@ -1,5 +1,9 @@
 import java.io.Serializable;
-
+/**
+ * This class is used to create a message that contains
+ * the name of the sender and the text of the message.
+ * @version 1.2
+ */
 public class Message implements Serializable {
     private User sender;
     private String text;

@@ -1,10 +1,18 @@
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-
+/**
+ * This class is used for private chat and has the name of sender
+ * and receiver and a list of messages between sender and receiver.
+ * @version 1.2
+ */
 public class PrivateChat implements Serializable {
     private User userA;
     private User userB;
     private ArrayList<Message> messages;
+    //
+    private FileOutputStream fosMessages;
 
     public PrivateChat(User sender, User receiver) {
         this.userA = sender;
@@ -32,5 +40,20 @@ public class PrivateChat implements Serializable {
 
     public User getSender() {
         return userA;
+    }
+
+    public void addToMessages(Message message){
+        messages.add(message);
+    }
+
+    public void saveMessages () {
+        try {
+            this.fosMessages = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosMessages);
+            oos.writeObject(this.messages);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

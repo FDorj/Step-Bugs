@@ -1,7 +1,13 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-
+/**
+ * This class is for storing user information.
+ * @version 2.1
+ */
 public class User implements Serializable {
     private String userName;
     //  private String password;
@@ -17,6 +23,14 @@ public class User implements Serializable {
     private HashSet<User> outGoingPending;
     private HashSet<User> inComingPending;
     private HashMap<User , PrivateChat> userPrivateChatHashMap;
+    //
+    private FileOutputStream fosFriends;
+    private FileOutputStream fosBlocked;
+    private FileOutputStream fosChats;
+    private FileOutputStream fosDiscordServers;
+    private FileOutputStream fosOutGoingPending;
+    private FileOutputStream fosInComingPending;
+    private FileOutputStream fosUserPrivateChatHashMap;
 
     public User(String userName, String hashedPassword, String email, String phoneNumber) {
         this.userName = userName;
@@ -31,6 +45,7 @@ public class User implements Serializable {
         this.outGoingPending = new HashSet<>();
         this.inComingPending = new HashSet<>();
         this.userPrivateChatHashMap = new HashMap<>();
+        this.fosFriends = null;
 
     }
 
@@ -111,4 +126,84 @@ public class User implements Serializable {
     public HashMap<User, PrivateChat> getUserPrivateChatHashMap() {
         return userPrivateChatHashMap;
     }
+
+    public void saveFriends () {
+        try {
+            this.fosFriends = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosFriends);
+            oos.writeObject(this.friends);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveBlocked () {
+        try {
+            this.fosBlocked = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosBlocked);
+            oos.writeObject(this.blocked);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveChats () {
+        try {
+            this.fosChats = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosChats);
+            oos.writeObject(this.chats);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveDiscordServers () {
+        try {
+            this.fosDiscordServers = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosDiscordServers);
+            oos.writeObject(this.discordServers);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveOutGoingPending () {
+        try {
+            this.fosOutGoingPending = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosOutGoingPending);
+            oos.writeObject(this.outGoingPending);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveInComingPending () {
+        try {
+            this.fosInComingPending = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosInComingPending);
+            oos.writeObject(this.inComingPending);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveUserPrivateChatHashMap () {
+        try {
+            this.fosUserPrivateChatHashMap = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosUserPrivateChatHashMap);
+            oos.writeObject(this.userPrivateChatHashMap);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+
 }

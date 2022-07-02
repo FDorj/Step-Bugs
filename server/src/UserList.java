@@ -1,9 +1,13 @@
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public final class UserList {
     private static UserList userList;
     private ArrayList<User> users;
+    //
+    private FileOutputStream fosUsers;
 
     private UserList() {
         this.users = new ArrayList<>();
@@ -55,6 +59,17 @@ public final class UserList {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void saveUsers () {
+        try {
+            this.fosUsers = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosUsers);
+            oos.writeObject(this.users);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

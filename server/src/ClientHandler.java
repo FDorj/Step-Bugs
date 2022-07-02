@@ -3,6 +3,8 @@ import jdk.jshell.Snippet;
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -241,7 +243,14 @@ public class ClientHandler implements Runnable {
                 else if (messageFromClient.startsWith("pv")) {
                     while (true){
                         Message message = (Message) objectInputStream.readObject();
+
                         String receiver = messageFromClient.substring(3);
+                        for (User user : user.getUserPrivateChatHashMap().keySet()){
+                            if (user.getUserName().equals(receiver)){
+                                PrivateChat privateChat = this.user.getUserPrivateChatHashMap().get(user);
+                                privateChat.addToMessages(message);
+                            }
+                        }
                         if (message.getText().equals("#exit")){
                             objectOutputStream.writeUnshared(new Message(message.getSender(), message.getText()));
                             break;
@@ -284,6 +293,16 @@ public class ClientHandler implements Runnable {
                     String[] split = messageFromClient.split("\\s");
                     while (true) {
                         Message message = (Message) objectInputStream.readObject();
+                        for (DiscordServer discordServer : user.getDiscordServers()){
+                            if (discordServer.getName().equals(split[1])){
+                                for (Channel channel : discordServer.getChannels()){
+                                    if (channel.getName().equals(split[2])){
+                                        TextChannel textChannel = (TextChannel) channel;
+                                        textChannel.addToMessages(message);
+                                    }
+                                }
+                            }
+                        }
                         if (message.getText().equals("#exit")) {
                             objectOutputStream.writeUnshared(new Message(message.getSender(), message.getText()));
                             break;
@@ -353,6 +372,15 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     }
+                }
+                else if (messageFromClient.startsWith("photo")) {
+                    String user1 = messageFromClient.substring(6);
+                    objectOutputStream.writeObject("yes");
+                    byte b[] = (byte[]) objectInputStream.readObject();
+                    System.out.println("####" + b);
+                    String path = "C:\\" + user1 + ".jpg";
+                    Files.write(Path.of(path),b);
+
                 }
                 }
 //                broadCastMessage(messageFromClient);

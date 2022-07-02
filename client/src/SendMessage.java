@@ -2,7 +2,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.TreeMap;
-
+/**
+ * This class is used to send the message.
+ * @version 1.3
+ */
 public class SendMessage implements Runnable {
     private PrivateChat privateChat ;
     private ObjectOutputStream objectOutputStream;

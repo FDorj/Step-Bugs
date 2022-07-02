@@ -1,3 +1,5 @@
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,6 +10,10 @@ public class DiscordServer implements Serializable {
     private HashSet<User> admin;
     private HashSet<User> allServerUsers;
     private HashSet<Channel> channels;
+    //
+    private FileOutputStream fosAdmin;
+    private FileOutputStream fosAllServerUsers;
+    private FileOutputStream fosChannels;
 
     public DiscordServer(String name , User owner) {
         this.name = name;
@@ -41,4 +47,38 @@ public class DiscordServer implements Serializable {
     public HashSet<User> getAllServerUsers() {
         return allServerUsers;
     }
+
+    public void saveAdmin () {
+        try {
+            this.fosAdmin = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosAdmin);
+            oos.writeObject(this.admin);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveAllServerUsers () {
+        try {
+            this.fosAllServerUsers = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosAllServerUsers);
+            oos.writeObject(this.allServerUsers);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveUChannels () {
+        try {
+            this.fosChannels = new FileOutputStream("output");
+            ObjectOutputStream oos = new ObjectOutputStream(this.fosChannels);
+            oos.writeObject(this.channels);
+            oos.close();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

@@ -5,7 +5,10 @@ import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Pattern;
-
+/**
+ * This class is for managing inputs.
+ * @version 1.7
+ */
 public class InputHandler {
     public static Scanner scanner = new Scanner(System.in);
 
@@ -17,14 +20,26 @@ public class InputHandler {
         while (true) {
             printFirstMenu();
             boolean whileBoolean = true;
+            int y = 0;
             while (whileBoolean) {
                 Client client = null;
                 int input = Integer.parseInt(scanner.nextLine());
                 if (input == 1) {
-                    System.out.print("Enter your username : ");
-                    String userName = scanner.nextLine();
-                    System.out.print("\nEnter your password : ");
-                    String password = scanner.nextLine();
+                    String password = null;
+                    String userName = null;
+                    boolean userNameRegex = false;
+                    boolean passwordRegex = false;
+                    System.out.print("Enter a username : ");
+                    userName = scanner.nextLine();
+                    //regex for userName
+                    String userNamePattern = "^[a-z0-9]{6,}$";
+
+
+                    System.out.print("\nEnter a password : ");
+                    password = scanner.nextLine();
+                    //regex for userName
+                    String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 20}$";
+
 
                     Socket socket = null;
                     try {
@@ -39,6 +54,7 @@ public class InputHandler {
                             break;
                         } else if (serverMessage.equals("SuccessfullySignedIn")) {
                             System.out.println(":D Successfully signed in :D");
+                            y = 100;
                         } else if (serverMessage.equals("You are already in")) {
                             System.out.println(serverMessage);
                             break;
@@ -49,7 +65,7 @@ public class InputHandler {
 
 
                     //sign up
-                } else if (input == 2) {
+                } if (input == 2 || y == 100) {
 
                     String password = null;
                     String userName = null;
@@ -62,74 +78,83 @@ public class InputHandler {
                     boolean phoneNumberRegex = false;
                     boolean photoPathRegex = false;
                     while (true) {
-                        System.out.print("Enter a username : ");
-                        userName = scanner.nextLine();
-                        //regex for userName
-                        String userNamePattern = "^[a-z0-9]{6,}$";
+                        if (input == 2) {
+                            System.out.print("Enter a username : ");
+                            userName = scanner.nextLine();
+                            //regex for userName
+                            String userNamePattern = "^[a-z0-9]{6,}$";
 
 
-                        System.out.print("\nEnter a password : ");
-                        password = scanner.nextLine();
-                        //regex for userName
-                        String passwordPattern = "^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+                            System.out.print("\nEnter a password : ");
+                            password = scanner.nextLine();
+                            //regex for userName
+                            String passwordPattern = "^(?=.*[0-9])"
+                                    + "(?=.*[a-z])(?=.*[A-Z])"
+                                    + "(?=.*[@#$%^&+=])"
+                                    + "(?=\\S+$).{8,20}$";
 
 
-                        System.out.print("\nEnter an email : ");
-                        email = scanner.nextLine();
-                        //regex for userName
-                        String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+                            System.out.print("\nEnter an email : ");
+                            email = scanner.nextLine();
+                            //regex for userName
+                            String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                                    + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
 
-                        System.out.print("\nEnter a phone number (optional) : ");
-                        System.out.println("Otherwise press enter");
-                        phoneNumber = scanner.nextLine();
-                        //regex for phoneNumber
-                        String phoneNumberPattern = "^(\\+98|0)?9\\d{9}$";
+                            System.out.print("\nEnter a phone number (optional) : ");
+                            System.out.println("Otherwise enter #");
+                            phoneNumber = scanner.nextLine();
+                            //regex for phoneNumber
+                            String phoneNumberPattern = "^(\\+98|0)?9\\d{9}$";
 
-                        System.out.println("\nEnter address of your photo (optional) : ");
-                        System.out.println("Otherwise press enter");
-                        photoPath = scanner.nextLine();
-                        String photoPathPattern = "\"([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
+                            System.out.println("\nEnter address of your photo (optional) : ");
+                            System.out.println("Otherwise enter #");
+                            photoPath = scanner.nextLine();
+                            String photoPathPattern = "\"([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
-//                    // read image from inputstream
-//                    InputStream isInput = new FileInputStream("/tmp/duke.png");
-//                    BufferedImage inputStreamImage = ImageIO.read(isInput);
+                            int x = 0;
+                            String hashed = null;
+                            try {
+                                hashed = hashPassword(password);
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            }
+                            //User user = new User(userName, hashed, email, phoneNumber);
 
 
-//                    try {
-//                        InputStream inputStream = new FileInputStream(photoPath);
-//                        BufferedImage bufferedImage = ImageIO.read(inputStream);
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+                            Socket socket = null;
+                            try {
+                                socket = new Socket("localhost", 2000);
+                                client = new Client(socket);
+                                if (client.checkUserName(userName)) {
+                                    System.out.println("This user already exists!");
+                                    x++;
+                                }
 
-                        int x = 0;
-                        String hashed = null;
-                        try {
-                            hashed = hashPassword(password);
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        }
-                        //User user = new User(userName, hashed, email, phoneNumber);
+                                userNameRegex = client.patternMatches(userName, userNamePattern);
+                                passwordRegex = client.patternMatches(password, passwordPattern);
+                                emailRegex = client.patternMatches(email, emailPattern);
+                                phoneNumberRegex = client.patternMatches(phoneNumber, phoneNumberPattern);
+                                photoPathRegex = client.patternMatches(photoPath, photoPathPattern);
 
-                        Socket socket = null;
-                        try {
-                            socket = new Socket("localhost", 2000);
-                            client = new Client(socket);
-                            if (client.checkUserName(userName)) {
-                                System.out.println("This user already exists!");
-                                x++;
+
+                                System.out.println("---------new user--------");
+                                User user = new User(userName, hashed, email, phoneNumber);
+                                client.signUp();
+                                client.addUserToClient(user);
+                                client.addUserToServer();
+
+                                if (!photoPath.equals("#")) {
+                                    client.setPhotoPath(photoPath);
+                                    System.out.println("***setPhoto");
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
 
-                            userNameRegex = client.patternMatches(userName, userNamePattern);
-                            passwordRegex = client.patternMatches(password, passwordPattern);
-                            emailRegex = client.patternMatches(email, emailPattern);
-                            phoneNumberRegex = client.patternMatches(phoneNumber, phoneNumberPattern);
-                            photoPathRegex = client.patternMatches(photoPath, photoPathPattern);
 
+                            System.out.println("Before regex");
                             //Regex
 //                            if (!userNameRegex) {
 //                                try {
@@ -155,7 +180,7 @@ public class InputHandler {
 //                                    x++;
 //                                }
 //                            }
-//                            if (!phoneNumberRegex) {
+//                            if (!phoneNumberRegex && !phoneNumber.equals("#")) {
 //                                try {
 //                                    throw new ExceptionHandler();
 //                                } catch (ExceptionHandler e) {
@@ -163,7 +188,7 @@ public class InputHandler {
 //                                    x++;
 //                                }
 //                            }
-//                            if (!photoPathRegex) {
+//                            if (!photoPathRegex && !photoPath.equals("#")) {
 //                                try {
 //                                    throw new ExceptionHandler();
 //                                } catch (ExceptionHandler e) {
@@ -172,21 +197,14 @@ public class InputHandler {
 //                                }
 //                            }
 //
+//                            System.out.println("1---");
 //                            if (x != 0) {
 //                                System.out.println("Try again!");
 //                                continue;
 //                            }
 
-                            User user = new User(userName, hashed, email, phoneNumber);
-                            client.signUp();
-                            client.addUserToClient(user);
-                            client.addUserToServer();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-
-
+                        System.out.println("2---");
                         while (!(false)) {
                             printMainMenu();
                             int choice = Integer.parseInt(scanner.nextLine());
