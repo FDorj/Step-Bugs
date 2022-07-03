@@ -303,18 +303,29 @@ public class ClientHandler implements Runnable {
                     String[] split = messageFromClient.split("\\s");
                     while (true) {
                         Message message = (Message) objectInputStream.readObject();
+                        System.out.println(message);
                         if (message.getText().startsWith("React")) {
                             String[] strings = message.getText().split("\\s");
+                            String text = null;
+                            for (int i = 2; i < strings.length - 1; i++) {
+                                if (text == null){
+                                    text = strings[i];
+                                }else {
+                                    text = text + " " + strings[i];
+                                }
+                            }
+                            System.out.println("******** " + text);
                             for (DiscordServer discordServer : user.getDiscordServers()) {
                                 if (discordServer.getName().equals(split[1])) {
                                     for (Channel channel : discordServer.getChannels()) {
                                         if (channel.getName().equals(split[2])) {
                                             TextChannel textChannel = (TextChannel) channel;
                                             for (Message message1 : textChannel.getAllMessages()){
-                                                if (message1.getSender().getUserName().equals(strings[1]) && message1.getText().equals(strings[2])){
+                                                if (message1.getSender().getUserName().equals(strings[1]) && message1.getText().equals(text)){
                                                     for (Reaction reaction : Reaction.values()){
-                                                        if (reaction.name().equalsIgnoreCase(strings[3])){
+                                                        if (reaction.name().equalsIgnoreCase(strings[strings.length-1])){
                                                             message1.addReaction(reaction);
+                                                            break;
                                                         }
                                                     }
                                                 }
@@ -323,14 +334,45 @@ public class ClientHandler implements Runnable {
                                     }
                                 }
                             }
-                        } else {
+                        }
+                        else if (message.getText().startsWith("Pin")){
+                            String[] strings = message.getText().split("\\s");
+                            String text = null;
+                            for (int i = 2; i < strings.length; i++) {
+                                if (text == null){
+                                    text = strings[i];
+                                }else {
+                                    text = text + " " + strings[i];
+                                }
+                            }
+                            System.out.println("******** " + text);
+                            for (DiscordServer discordServer : user.getDiscordServers()) {
+                                if (discordServer.getName().equals(split[1])) {
+                                    for (Channel channel : discordServer.getChannels()) {
+                                        if (channel.getName().equals(split[2])) {
+                                            TextChannel textChannel = (TextChannel) channel;
+                                            for (Message message1 : textChannel.getAllMessages()){
+                                                if (message1.getSender().getUserName().equals(strings[1]) && message1.getText().equals(text)){
+                                                    textChannel.addToPinMessage(message1);
+                                                    System.out.println("Pin ******** " + textChannel.getPinedMessage());
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
 
                         for (DiscordServer discordServer : user.getDiscordServers()) {
                             if (discordServer.getName().equals(split[1])) {
                                 for (Channel channel : discordServer.getChannels()) {
                                     if (channel.getName().equals(split[2])) {
                                         TextChannel textChannel = (TextChannel) channel;
-                                        textChannel.addToMessages(message);
+                                        if (!message.getText().equals("#exit")) {
+                                            textChannel.addToMessages(message);
+                                        }
                                     }
                                 }
                             }
@@ -342,7 +384,7 @@ public class ClientHandler implements Runnable {
                         for (ClientHandler clientHandler1 : clientHandlers) {
                             if (!clientHandler1.getUser().getUserName().equals(this.user.getUserName())) {
                                 try {
-                                    clientHandler1.objectOutputStream.writeObject(message);
+                                    clientHandler1.objectOutputStream.writeUnshared(message);
                                 } catch (IOException e) {
                                     closeEveryThing(socket, objectInputStream, objectOutputStream);
                                 }
@@ -438,6 +480,36 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     }
+                }
+                else if (messageFromClient.startsWith("PinnedMessages")){
+                    String[] strings = messageFromClient.split("\\s");
+                    String serverName = strings[1];
+                    String channelName = strings[2];
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(serverName)){
+                            for (Channel channel : discordServer.getChannels()){
+                                if (channel.getName().equals(channelName)){
+                                    TextChannel textChannel = (TextChannel) channel;
+                                    System.out.println(textChannel.getPinedMessage());
+                                    objectOutputStream.writeUnshared(textChannel.getPinedMessage());
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (messageFromClient.startsWith("CreateRole")){
+                    String[] strings = messageFromClient.split("\\s");
+                    String roleName = strings[1];
+                    String userName = strings[2];
+                    User user = userList.findUserByUsername(userName);
+                    String servername = strings[3];
+                    HashSet<Role> roles = (HashSet<Role>) objectInputStream.readObject();
+                    for (DiscordServer discordServer : user.getDiscordServers()){
+                        if (discordServer.getName().equals(servername)){
+                            discordServer.addRole(roles, roleName, user);
+                        }
+                    }
+
                 }
             }
 //                broadCastMessage(messageFromClient);

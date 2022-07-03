@@ -32,6 +32,14 @@ public class TextChannel extends Channel implements Serializable {
         return allMessages;
     }
 
+    public ArrayList<Message> getPinedMessage() {
+        return pinedMessage;
+    }
+
+    public void addToPinMessage(Message message) {
+        pinedMessage.add(message);
+    }
+
     /**
      * This method for read message.
      */

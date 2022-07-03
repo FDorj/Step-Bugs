@@ -500,6 +500,26 @@ public class Client {
         return messageArrayList;
     }
 
+    public ArrayList<Message> pinnedMessages(DiscordServer discordServer, TextChannel textChannel){
+        ArrayList<Message> messageArrayList = null;
+        try {
+            objectOutputStream.writeObject("PinnedMessages " + discordServer.getName() + " " + textChannel.getName());
+            messageArrayList = (ArrayList<Message>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return messageArrayList;
+    }
+
+    public void createRole(HashSet<Role> roles, String userName, String roleName, DiscordServer discordServer){
+        try {
+            objectOutputStream.writeObject("CreateRole " + roleName + " " + userName + " " +discordServer.getName());
+            objectOutputStream.writeObject(roles);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method set the path of photo.
      * @param photoPath

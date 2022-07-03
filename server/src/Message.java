@@ -43,9 +43,9 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "sender=" + sender +
+        return "sender=" + sender.getUserName() +
                 ", text='" + text + "'\n" +
-                ", messageReacts=" + messageReacts +
+                "messageReacts=" + messageReacts +
                 '}';
     }
 }

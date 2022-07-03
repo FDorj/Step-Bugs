@@ -1,6 +1,8 @@
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 /**
@@ -16,6 +18,7 @@ public class DiscordServer implements Serializable {
     private HashSet<User> admin;
     private HashSet<User> allServerUsers;
     private HashSet<Channel> channels;
+    private HashMap<User, HashMap<String, HashSet<Role>>> userRoleHashMap;
     //
     private FileOutputStream fosAdmin;
     private FileOutputStream fosAllServerUsers;
@@ -33,6 +36,16 @@ public class DiscordServer implements Serializable {
         this.allServerUsers = new HashSet<>();
         this.channels = new HashSet<>();
         this.allServerUsers.add(owner);
+        this.userRoleHashMap = new HashMap<>();
+
+    }
+
+    public void addRole(HashSet<Role> roles, String roleName, User user){
+        HashSet<Role> roles1 = new HashSet<>();
+        roles1 = roles;
+        HashMap<String, HashSet<Role>> stringHashSetHashMap = new HashMap<>();
+        stringHashSetHashMap.put(roleName, roles1);
+        userRoleHashMap.put(user, stringHashSetHashMap);
     }
 
     public String getName() {

@@ -77,7 +77,7 @@ public class SendMessage implements Runnable {
             Message message = new Message(client.getUser(), msg);
             try {
                 // write on the output stream
-                objectOutputStream.writeUnshared(message);
+                objectOutputStream.writeObject(message);
                 if (msg.equals("#exit")) {
                     t.interrupt();
                     flag = false;

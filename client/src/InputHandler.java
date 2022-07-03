@@ -268,7 +268,7 @@ public class InputHandler {
                                             } else if (pvMenu == 3) {
                                                 break;
                                             } else {
-                                                continue;
+                                                break;
                                             }
                                         }
 
@@ -373,9 +373,9 @@ public class InputHandler {
                                 }
                             } else if (choice == 2) {
                                 printServerMenu();
-//                        System.out.println("1.All servers");
-//                        System.out.println("2.Create server");
-//                        System.out.println("3.Back to main menu");
+//                                System.out.println("1.All servers");
+//                                System.out.println("2.Create server");
+//                                System.out.println("3.Back to main menu");
 
                                 ArrayList<DiscordServer> allServers = new ArrayList<>();
                                 int select = Integer.parseInt(scanner.nextLine());
@@ -402,7 +402,27 @@ public class InputHandler {
 //                                            System.out.println("6. Setting");
 //                                            System.out.println("7. Back to main menu");
                                             int serverChat = Integer.parseInt(scanner.nextLine());
-                                            if (serverChat == 1){
+                                            if (serverChat == 0){
+                                                System.out.println("Enter A user name:");
+                                                String friendUserName = scanner.nextLine();
+                                                System.out.println("Enter a name for your Role");
+                                                String roleName = scanner.nextLine();
+                                                System.out.println("Which roles you want to add?");
+                                                int j = 1;
+                                                Role[] roles = Role.values();
+                                                for (Role role : roles){
+                                                    System.out.println(j + ". " + role.name());
+                                                    j++;
+                                                }
+                                                HashSet<Role> roles1 = new HashSet<>();
+                                                String choices = scanner.nextLine();
+                                                String[] splitChoice = choices.split("\\s");
+                                                for (int k = 0; k < splitChoice.length; k++) {
+                                                    roles1.add(roles[(Integer.parseInt(splitChoice[k])) - 1]);
+                                                }
+                                                client.createRole(roles1, friendUserName, roleName, allServers.get(whichServer-1));
+                                            }
+                                            else if (serverChat == 1){
                                                 HashMap<User, Status> userStatusHashMap = client.serverUsers(allServers.get(whichServer-1));
                                                 for (User keyUser : userStatusHashMap.keySet()){
                                                     System.out.println(keyUser.getUserName() + " (" + userStatusHashMap.get(keyUser) + ")");
@@ -443,7 +463,10 @@ public class InputHandler {
                                                             }
                                                         }
                                                         else if (chatMenuChoice == 2){   //pinned messages
-
+                                                            ArrayList<Message> messageArrayList = client.pinnedMessages(allServers.get(whichServer-1), textChannelArrayList.get(whichChannel-1));
+                                                            for (Message message : messageArrayList){
+                                                                System.out.println(message);
+                                                            }
                                                         }
                                                         else if (chatMenuChoice == 3) {
                                                             System.out.println("------------------------------------");
@@ -498,7 +521,8 @@ public class InputHandler {
                                     System.out.println("Enter a name for your server:");
                                     String serverName = scanner.nextLine();
                                     client.createServer(serverName);
-                                } else if (select == 3) {
+                                }
+                                else if (select == 3) {
                                     continue;
                                 }
                             } else if (choice == 3) {
@@ -617,6 +641,7 @@ public class InputHandler {
     }
 
     public void printServerChatMenu () {
+        System.out.println("0. Create a role");
         System.out.println("1. Show All Users");
         System.out.println("2. Show Text Channels");
         System.out.println("3. Show Voice Channels");

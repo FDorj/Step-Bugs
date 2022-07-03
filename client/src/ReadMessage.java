@@ -52,7 +52,9 @@ public class ReadMessage extends Thread {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                System.out.println(msg);
+                if (!msg.getText().equals("#exit")){
+                    System.out.println(msg);
+                }
             } catch (IOException e) {
 
                 e.printStackTrace();

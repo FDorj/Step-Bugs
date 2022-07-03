@@ -20,8 +20,8 @@ public class TextChannel extends Channel implements Serializable {
      */
     public TextChannel(String name) {
         super(name);
-        this.allMessages = allMessages;
-        this.pinedMessage = pinedMessage;
+        this.allMessages = new ArrayList<>();
+        this.pinedMessage = new ArrayList<>();
     }
 
     public void addToMessages(Message message){
@@ -30,6 +30,14 @@ public class TextChannel extends Channel implements Serializable {
 
     public ArrayList<Message> getAllMessages() {
         return allMessages;
+    }
+
+    public ArrayList<Message> getPinedMessage() {
+        return pinedMessage;
+    }
+
+    public void addToPinMessage(Message message) {
+        pinedMessage.add(message);
     }
 
     /**
