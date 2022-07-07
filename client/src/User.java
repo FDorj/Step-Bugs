@@ -142,7 +142,7 @@ public class User implements Serializable {
      */
     public void saveFriends () {
         try {
-            this.fosFriends = new FileOutputStream("output");
+            this.fosFriends = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosFriends);
             oos.writeObject(this.friends);
             oos.close();
@@ -156,7 +156,7 @@ public class User implements Serializable {
      */
     public void saveBlocked () {
         try {
-            this.fosBlocked = new FileOutputStream("output");
+            this.fosBlocked = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosBlocked);
             oos.writeObject(this.blocked);
             oos.close();
@@ -170,7 +170,7 @@ public class User implements Serializable {
      */
     public void saveChats () {
         try {
-            this.fosChats = new FileOutputStream("output");
+            this.fosChats = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosChats);
             oos.writeObject(this.chats);
             oos.close();
@@ -184,7 +184,7 @@ public class User implements Serializable {
      */
     public void saveDiscordServers () {
         try {
-            this.fosDiscordServers = new FileOutputStream("output");
+            this.fosDiscordServers = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosDiscordServers);
             oos.writeObject(this.discordServers);
             oos.close();
@@ -198,7 +198,7 @@ public class User implements Serializable {
      */
     public void saveOutGoingPending () {
         try {
-            this.fosOutGoingPending = new FileOutputStream("output");
+            this.fosOutGoingPending = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosOutGoingPending);
             oos.writeObject(this.outGoingPending);
             oos.close();
@@ -212,7 +212,7 @@ public class User implements Serializable {
      */
     public void saveInComingPending () {
         try {
-            this.fosInComingPending = new FileOutputStream("output");
+            this.fosInComingPending = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosInComingPending);
             oos.writeObject(this.inComingPending);
             oos.close();
@@ -226,7 +226,7 @@ public class User implements Serializable {
      */
     public void saveUserPrivateChatHashMap () {
         try {
-            this.fosUserPrivateChatHashMap = new FileOutputStream("output");
+            this.fosUserPrivateChatHashMap = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosUserPrivateChatHashMap);
             oos.writeObject(this.userPrivateChatHashMap);
             oos.close();

@@ -35,13 +35,13 @@ public class InputHandler {
                     System.out.print("Enter a username : ");
                     userName = scanner.nextLine();
                     //regex for userName
-                    String userNamePattern = "^[a-z0-9]{6,}$";
+//                    String userNamePattern = "^[a-z0-9]{6,}$";
 
 
                     System.out.print("\nEnter a password : ");
                     password = scanner.nextLine();
                     //regex for userName
-                    String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 20}$";
+//                    String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8, 20}$";
 
 
                     Socket socket = null;
@@ -68,7 +68,7 @@ public class InputHandler {
 
 
                     //sign up
-                } if (input == 2 || y == 100) {
+                }else if (input == 2) {
 
                     String password = null;
                     String userName = null;
@@ -81,27 +81,22 @@ public class InputHandler {
                     boolean phoneNumberRegex = false;
                     boolean photoPathRegex = false;
                     while (true) {
-                        if (input == 2) {
                             System.out.print("Enter a username : ");
                             userName = scanner.nextLine();
                             //regex for userName
-                            String userNamePattern = "^[a-z0-9]{6,}$";
+                            String userNamePattern = "[A-Za-z][A-Za-z0-9_]{5,}$";
 
 
                             System.out.print("\nEnter a password : ");
                             password = scanner.nextLine();
                             //regex for userName
-                            String passwordPattern = "^(?=.*[0-9])"
-                                    + "(?=.*[a-z])(?=.*[A-Z])"
-                                    + "(?=.*[@#$%^&+=])"
-                                    + "(?=\\S+$).{8,20}$";
+                            String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
 
 
                             System.out.print("\nEnter an email : ");
                             email = scanner.nextLine();
                             //regex for userName
-                            String emailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                                    + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+                            String emailPattern = "^(.+)@(.+)$";
 
 
                             System.out.print("\nEnter a phone number (optional) : ");
@@ -115,6 +110,7 @@ public class InputHandler {
                             photoPath = scanner.nextLine();
                             String photoPathPattern = "\"([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
+                        System.out.println("##########");
                             int x = 0;
                             String hashed = null;
                             try {
@@ -124,6 +120,7 @@ public class InputHandler {
                             }
                             //User user = new User(userName, hashed, email, phoneNumber);
 
+                        System.out.println("&&&&&&&&&");
 
                             Socket socket = null;
                             try {
@@ -134,11 +131,17 @@ public class InputHandler {
                                     x++;
                                 }
 
+                                System.out.println("1-------------");
                                 userNameRegex = client.patternMatches(userName, userNamePattern);
+                                System.out.println("2-------------");
                                 passwordRegex = client.patternMatches(password, passwordPattern);
+                                System.out.println("3-------------");
                                 emailRegex = client.patternMatches(email, emailPattern);
+                                System.out.println("4-------------");
                                 phoneNumberRegex = client.patternMatches(phoneNumber, phoneNumberPattern);
-                                photoPathRegex = client.patternMatches(photoPath, photoPathPattern);
+                                System.out.println("5-------------");
+//                                photoPathRegex = client.patternMatches(photoPath, photoPathPattern);
+                                System.out.println("6-------------");
 
 
                                 System.out.println("---------new user--------");
@@ -159,38 +162,38 @@ public class InputHandler {
 
                             System.out.println("Before regex");
                             //Regex
-//                            if (!userNameRegex) {
-//                                try {
-//                                    throw new ExceptionHandler();
-//                                } catch (ExceptionHandler e) {
-//                                    System.out.println("Username is not valid!");
-//                                    x++;
-//                                }
-//                            }
-//                            if (!passwordRegex) {
-//                                try {
-//                                    throw new ExceptionHandler();
-//                                } catch (ExceptionHandler e) {
-//                                    System.out.println("Password is not valid!");
-//                                    x++;
-//                                }
-//                            }
-//                            if (!emailRegex) {
-//                                try {
-//                                    throw new ExceptionHandler();
-//                                } catch (ExceptionHandler e) {
-//                                    System.out.println("email is not valid!");
-//                                    x++;
-//                                }
-//                            }
-//                            if (!phoneNumberRegex && !phoneNumber.equals("#")) {
-//                                try {
-//                                    throw new ExceptionHandler();
-//                                } catch (ExceptionHandler e) {
-//                                    System.out.println("Phone number is not valid!");
-//                                    x++;
-//                                }
-//                            }
+                            if (!userNameRegex) {
+                                try {
+                                    throw new ExceptionHandler();
+                                } catch (ExceptionHandler e) {
+                                    System.out.println("Username is not valid!");
+                                    x++;
+                                }
+                            }
+                            if (!passwordRegex) {
+                                try {
+                                    throw new ExceptionHandler();
+                                } catch (ExceptionHandler e) {
+                                    System.out.println("Password is not valid!");
+                                    x++;
+                                }
+                            }
+                            if (!emailRegex) {
+                                try {
+                                    throw new ExceptionHandler();
+                                } catch (ExceptionHandler e) {
+                                    System.out.println("email is not valid!");
+                                    x++;
+                                }
+                            }
+                            if (!phoneNumberRegex && !phoneNumber.equals("#")) {
+                                try {
+                                    throw new ExceptionHandler();
+                                } catch (ExceptionHandler e) {
+                                    System.out.println("Phone number is not valid!");
+                                    x++;
+                                }
+                            }
 //                            if (!photoPathRegex && !photoPath.equals("#")) {
 //                                try {
 //                                    throw new ExceptionHandler();
@@ -199,14 +202,14 @@ public class InputHandler {
 //                                    x++;
 //                                }
 //                            }
-//
-//                            System.out.println("1---");
-//                            if (x != 0) {
-//                                System.out.println("Try again!");
-//                                continue;
-//                            }
 
-                        }
+                        System.out.println("x = " + x);
+                            System.out.println("1---");
+                            if (x != 0) {
+                                System.out.println("Try again!");
+                                continue;
+                            }
+
                         System.out.println("2---");
                         while (!(false)) {
                             printMainMenu();

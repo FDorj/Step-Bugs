@@ -1,6 +1,8 @@
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 /**
  * This class is used for private chat and has the name of sender
@@ -13,6 +15,7 @@ public class PrivateChat implements Serializable {
     private ArrayList<Message> messages;
     //
     private FileOutputStream fosMessages;
+    private Path sendFilePath;
 
     /**
      * This is a constructor for this class.
@@ -23,6 +26,8 @@ public class PrivateChat implements Serializable {
         this.userA = sender;
         this.userB = receiver;
         this.messages = new ArrayList<>();
+        this.fosMessages = null;
+        this.sendFilePath = null;
     }
 
     /**
@@ -59,12 +64,20 @@ public class PrivateChat implements Serializable {
      */
     public void saveMessages () {
         try {
-            this.fosMessages = new FileOutputStream("output");
+            this.fosMessages = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosMessages);
             oos.writeObject(this.messages);
             oos.close();
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public Path getSendFile() {
+        return sendFilePath;
+    }
+
+    public void setSendFile(Path sendFile) {
+        this.sendFilePath = sendFile;
     }
 }

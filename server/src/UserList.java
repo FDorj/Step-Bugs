@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.security.NoSuchAlgorithmException;
@@ -81,13 +82,24 @@ public final class UserList {
      */
     public void saveUsers () {
         try {
-            this.fosUsers = new FileOutputStream("output");
+            this.fosUsers = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosUsers);
             oos.writeObject(this.users);
             oos.close();
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void readUsers () {
+        try{
+            FileInputStream fin=new FileInputStream("D:\\");
+            int i=0;
+            while((i=fin.read())!=-1){
+                System.out.print((char)i);
+            }
+            fin.close();
+        }catch(Exception e){System.out.println(e);}
     }
 
 }

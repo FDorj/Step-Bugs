@@ -77,7 +77,7 @@ public class DiscordServer implements Serializable {
      */
     public void saveAdmin () {
         try {
-            this.fosAdmin = new FileOutputStream("output");
+            this.fosAdmin = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosAdmin);
             oos.writeObject(this.admin);
             oos.close();
@@ -90,7 +90,7 @@ public class DiscordServer implements Serializable {
      */
     public void saveAllServerUsers () {
         try {
-            this.fosAllServerUsers = new FileOutputStream("output");
+            this.fosAllServerUsers = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosAllServerUsers);
             oos.writeObject(this.allServerUsers);
             oos.close();
@@ -103,7 +103,7 @@ public class DiscordServer implements Serializable {
      */
     public void saveUChannels () {
         try {
-            this.fosChannels = new FileOutputStream("output");
+            this.fosChannels = new FileOutputStream("C:\\");
             ObjectOutputStream oos = new ObjectOutputStream(this.fosChannels);
             oos.writeObject(this.channels);
             oos.close();

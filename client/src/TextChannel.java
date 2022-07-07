@@ -1,6 +1,7 @@
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 /**
  * This class is for text channel and has a list of
@@ -13,6 +14,7 @@ public class TextChannel extends Channel implements Serializable {
     //
     private FileOutputStream fosAllMessages;
     private FileOutputStream fosPinedMessages;
+    private Path sendFilePath;
 
     /**
      * This is a constructor for this class.
@@ -20,8 +22,9 @@ public class TextChannel extends Channel implements Serializable {
      */
     public TextChannel(String name) {
         super(name);
-        this.allMessages = allMessages;
-        this.pinedMessage = pinedMessage;
+        this.allMessages = new ArrayList<>();
+        this.pinedMessage = new ArrayList<>();
+        this.sendFilePath = null;
     }
 
     public void addToMessages(Message message){
@@ -65,5 +68,13 @@ public class TextChannel extends Channel implements Serializable {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public Path getSendFilePath() {
+        return sendFilePath;
+    }
+
+    public void setSendFilePath(Path sendFilePath) {
+        this.sendFilePath = sendFilePath;
     }
 }

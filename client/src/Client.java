@@ -544,6 +544,54 @@ public class Client {
 
     }
 
+    public void sendFileInPrivateChat (PrivateChat privateChat , String path) {
+        String string = null;
+        InputStream inputStream = null;
+        String string2 = null;
+        try {
+            File file = new File(path);
+            byte b[] = Files.readAllBytes(file.toPath());
+
+            objectOutputStream.writeObject("sendFilePv ");
+            string2 = (String) objectInputStream.readObject();
+            if (string2.equals("yes1")) {
+                objectOutputStream.writeObject(b);
+            }
+
+            string = (String) objectInputStream.readObject();
+
+            if (string.equals("yes2")) {
+                objectOutputStream.writeObject(b);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendFileInTextChannel (TextChannel textChannel , String path) {
+        String string = null;
+        InputStream inputStream = null;
+        String string2 = null;
+        try {
+            File file = new File(path);
+            byte b[] = Files.readAllBytes(file.toPath());
+
+            objectOutputStream.writeObject("sendFileTextChannel ");
+            string2 = (String) objectInputStream.readObject();
+            if (string2.equals("yes1")) {
+                objectOutputStream.writeObject(b);
+            }
+
+            string = (String) objectInputStream.readObject();
+
+            if (string.equals("yes2")) {
+                objectOutputStream.writeObject(b);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 //    public void closeEveryThing (Socket socket , ObjectInputStream objectInputStream , ObjectOutputStream objectOutputStream) {
 //        if (objectInputStream != null) {
