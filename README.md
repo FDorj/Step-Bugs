@@ -1,4 +1,4 @@
-# Project Title: Backend for Real-Time Messaging Application
+# Project Title: Backend for Discord Clone in Java
 
 ## Description
 This project, is a backend implementation for a real-time messaging application inspired by Discord. It focuses on data management, server-client interactions, and real-time messaging functionalities, built using Java.
